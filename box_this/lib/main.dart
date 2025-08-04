@@ -1,3 +1,4 @@
+import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,8 +12,15 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+        appBar: TiTleAppBar(
+          title: "Home",
+          setBackIcon: false,
+        ),
+        body : Center(
+          child: Text(
+            'Welcome to Box This!',
+            style: TextStyle(fontSize: 24, color: Colors.black),
+          ),
         ),
       ),
     );
