@@ -25,7 +25,7 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
             stops: [0.0, 1.0],
           ),
           border: Border.all(
-            color: const Color(0xFF3A4801),
+            color: Theme.of(context).colorScheme.tertiary,
             width: 1.0, // 1px
           ),
         ),
@@ -36,9 +36,9 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: setBackIcon,
       leading: setBackIcon
           ? IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_ios_new,
-                color: Color(0xFFFAFAFA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -51,12 +51,12 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
           Text(
             title,
             textAlign: TextAlign.end,
-            style: const TextStyle(
+            style: TextStyle(
               // TODO Schriftart anpassen
               fontFamily: 'Roboto',
               fontSize: 32,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFFAFAFA),
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ],
@@ -73,7 +73,7 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
         //   ),
         // ),
         IconButton(
-          icon: const Icon(Icons.home, size: 32, color: Color(0xFFFAFAFA)),
+          icon: Icon(Icons.home, size: 32, color: Theme.of(context).colorScheme.primary),
           onPressed: () {
             print('Home Icon gedrückt!');
           },
@@ -82,6 +82,6 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  @override 
+  @override
   Size get preferredSize => const Size.fromHeight(48.0); // Höhe der AppBar anpassen
 }
