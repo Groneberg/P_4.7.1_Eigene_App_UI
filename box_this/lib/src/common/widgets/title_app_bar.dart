@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 
 class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final String icon;
   final bool setBackIcon;
   // Icom icon;
 
@@ -10,7 +12,7 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.title = "Default Title",
     // this.setBackIcon = false,
-    this.setBackIcon = true,
+    this.setBackIcon = true, required this.icon,
   });
 
   @override
@@ -24,10 +26,7 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
             colors: [const Color(0xFF3A4801), const Color(0xFF7D9200)],
             stops: [0.0, 1.0],
           ),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.tertiary,
-            width: 1.0, // 1px
-          ),
+          border: Border.all(color: Theme.of(context).colorScheme.tertiary),
         ),
       ),
       elevation: 0,
@@ -72,11 +71,23 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
         //     colorFilter: const ColorFilter.mode(Color(0xFFFAFAFA), BlendMode.srcIn), // SVG einfärben
         //   ),
         // ),
-        IconButton(
-          icon: Icon(Icons.home, size: 32, color: Theme.of(context).colorScheme.primary),
-          onPressed: () {
-            print('Home Icon gedrückt!');
-          },
+        // IconButton(
+        //   icon: Icon(Icons.home, size: 32, color: Theme.of(context).colorScheme.primary),
+        //   onPressed: () {
+        //     print('Home Icon gedrückt!');
+        //   },
+        // ),
+        Padding(
+          padding: EdgeInsetsGeometry.only(left: 16,right: 24),
+          child: SvgPicture.asset(
+            'assets/svg/icons/$icon.svg', // Passe den Pfad zu deinem SVG an
+            width: 32,
+            height: 32,
+            colorFilter: const ColorFilter.mode(
+              Color(0xFFFAFAFA),
+              BlendMode.srcIn,
+            ), // SVG einfärben
+          ),
         ),
       ],
     );

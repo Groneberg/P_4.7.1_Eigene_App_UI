@@ -13,7 +13,7 @@ class BoxDetailScreen extends StatelessWidget {
     return Scaffold(
       // TODO aus Theme
       backgroundColor: const Color(0xFFFAFAFA),
-      appBar: TiTleAppBar(title: "Home", setBackIcon: false),
+      appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "box_icon"),
       body: Column(
         children: [
           CustomSearchBar(),
@@ -34,10 +34,18 @@ class BoxDetailScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SmallActionButton(svgIconPath: "assets/svg/icons/box_icon.svg"),
-                SmallActionButton(svgIconPath: "assets/svg/icons/item_icon.svg"),
-                SmallActionButton(svgIconPath: "assets/svg/icons/event2_icon.svg"),
-                SmallActionButton(svgIconPath: "assets/svg/icons/edit_icon.svg"),
-                SmallActionButton(svgIconPath: "assets/svg/icons/delete_icon.svg"),
+                SmallActionButton(
+                  svgIconPath: "assets/svg/icons/item_icon.svg",
+                ),
+                SmallActionButton(
+                  svgIconPath: "assets/svg/icons/event2_icon.svg",
+                ),
+                SmallActionButton(
+                  svgIconPath: "assets/svg/icons/edit_icon.svg",
+                ),
+                SmallActionButton(
+                  svgIconPath: "assets/svg/icons/delete_icon.svg",
+                ),
               ],
             ),
           ),

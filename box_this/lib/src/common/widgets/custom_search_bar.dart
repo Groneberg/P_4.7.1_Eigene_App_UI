@@ -44,7 +44,7 @@ class _SearchBarState extends State<CustomSearchBar> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: const Color(0xFF4E0F19),
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
               decoration: InputDecoration(
                 hintText: 'Search...',

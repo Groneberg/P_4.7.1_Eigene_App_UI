@@ -11,9 +11,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // TODO aus Theme
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: TiTleAppBar(title: "Home", setBackIcon: false),
+      appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
       body: Column(
         children: [
           CustomSearchBar(),
