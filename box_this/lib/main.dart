@@ -1,6 +1,7 @@
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,9 +40,9 @@ class MainApp extends StatelessWidget {
         ),
         child: SafeArea(
           // child: HomeScreen()
-          // child: BoxDetailScreen(),
+          child: BoxDetailScreen(),
           // child: CreateBoxScreen(),
-          child: CreateItemScreen(),
+          // child: CreateItemScreen(),
         ),
       ),
     );

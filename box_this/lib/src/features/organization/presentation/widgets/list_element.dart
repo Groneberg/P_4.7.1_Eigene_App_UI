@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ListElement extends StatefulWidget {
   // Box box;
@@ -28,10 +29,20 @@ class _ListElementState extends State<ListElement> {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.check_box_outline_blank,
-                color: const Color(0xFF4E0F19),
-                size: 32,
+              // Icon(
+              //   Icons.check_box_outline_blank,
+              //   color: const Color(0xFF4E0F19),
+              //   size: 32,
+              // ),
+              // TODO Variable für svg
+              SvgPicture.asset(
+                "assets/svg/icons/box_icon.svg",
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.onPrimary,
+                  BlendMode.srcIn,
+                ),
+                width: 32,
+                height: 32,
               ),
               SizedBox(width: 16),
               // widget.box.name
@@ -53,7 +64,11 @@ class _ListElementState extends State<ListElement> {
                   children: [
                     Icon(Icons.edit, color: const Color(0xFF4E0F19), size: 24),
                     // SizedBox(width: 16,),
-                    Icon(Icons.delete, color: const Color(0xFF4E0F19), size: 24),
+                    Icon(
+                      Icons.delete,
+                      color: const Color(0xFF4E0F19),
+                      size: 24,
+                    ),
                   ],
                 ),
               ),

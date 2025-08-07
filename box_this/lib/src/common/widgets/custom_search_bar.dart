@@ -19,7 +19,11 @@ class _SearchBarState extends State<CustomSearchBar> {
         gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
-          colors: [const Color(0xFFF1D5AE), const Color(0xFFDBB77F), const Color(0xFFDFB983)],
+          colors: [
+            const Color(0xFFF1D5AE),
+            const Color(0xFFDBB77F),
+            const Color(0xFFDFB983),
+          ],
           stops: [0.0, 0.5564, 1.0],
         ),
         border: Border.all(
@@ -53,7 +57,10 @@ class _SearchBarState extends State<CustomSearchBar> {
             ),
           ),
           Container(width: 5, color: const Color(0xFF000000)),
-          Icon(Icons.search, color: const Color(0xFF4E0F19), size: 24),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.search, color: const Color(0xFF4E0F19), size: 32),
+          ),
         ],
       ),
     );

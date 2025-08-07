@@ -22,7 +22,7 @@ class ElementTextInput extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
             child: TextField(
               maxLines: null,
               minLines: 3,

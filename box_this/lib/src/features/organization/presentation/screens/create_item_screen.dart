@@ -5,6 +5,7 @@ import 'package:box_this/src/features/organization/presentation/widgets/amount_i
 import 'package:box_this/src/features/organization/presentation/widgets/create_button.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_name_input.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_text_input.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
 import 'package:flutter/material.dart';
 
 class CreateItemScreen extends StatelessWidget {
@@ -32,7 +33,14 @@ class CreateItemScreen extends StatelessWidget {
                   ElementNameInput(icon: "item_icon", hintText: "Itemname...",),
                   ElementTextInput(labelName: "Description", hintText: "Description..."),
                   ElementTextInput(labelName: "Location", hintText: "Location..."),
-                  AmountInput(),
+                  AmountInput(labelName: "Amount"),
+                  AmountInput(labelName: "MinAmount"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SmallActionButton(svgIconPath: "assets/svg/icons/event2_icon.svg")
+                    ],
+                  )
                 ],
               )
             ),

@@ -13,7 +13,7 @@ class BoxDetailScreen extends StatelessWidget {
     return Scaffold(
       // TODO aus Theme
       backgroundColor: const Color(0xFFFAFAFA),
-      appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "box_icon"),
+      appBar: TiTleAppBar(title: "Garden", setBackIcon: false, icon: "box_icon"),
       body: Column(
         children: [
           CustomSearchBar(),
@@ -23,7 +23,7 @@ class BoxDetailScreen extends StatelessWidget {
               children: [
                 ElementDescription(
                   description:
-                      "efficitur. ex id Sed consectetur tincidunt cursus odio hendrerit amet, cursus ullamcorper faucibus fringilla leo.",
+                      "A garden is a delimited outdoor space that is primarily created and used for cultivating plants.",
                 ),
               ],
             ),

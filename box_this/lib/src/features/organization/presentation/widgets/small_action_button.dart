@@ -24,8 +24,8 @@ class SmallActionButton extends StatelessWidget {
           stops: [0.0, 0.5564, 1.0],
         ),
         border: Border.all(
-          color: const Color(0xFF3A4801),
-          width: 1.0, // 1px
+          color: Theme.of(context).colorScheme.tertiary,
+          width: 2.0,
         ),
       ),
       child: Center( child: 
