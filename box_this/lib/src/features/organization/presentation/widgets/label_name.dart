@@ -22,12 +22,7 @@ class LabelName extends StatelessWidget {
           height: 20,
           child: Text(
             labelName,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 16,
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.w400,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
       ],

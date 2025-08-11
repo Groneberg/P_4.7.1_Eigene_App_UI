@@ -11,8 +11,7 @@ class BoxDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // TODO aus Theme
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: TiTleAppBar(title: "Garden", setBackIcon: false, icon: "box_icon"),
       body: Column(
         children: [

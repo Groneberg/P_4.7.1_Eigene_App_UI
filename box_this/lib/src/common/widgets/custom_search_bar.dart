@@ -1,3 +1,4 @@
+import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatefulWidget {
@@ -10,24 +11,17 @@ class CustomSearchBar extends StatefulWidget {
 class _SearchBarState extends State<CustomSearchBar> {
   @override
   Widget build(BuildContext context) {
+    final gradients = Theme.of(context).extension<GradientsExtension>();
+    
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 48,
       padding: EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            const Color(0xFFF1D5AE),
-            const Color(0xFFDBB77F),
-            const Color(0xFFDFB983),
-          ],
-          stops: [0.0, 0.5564, 1.0],
-        ),
+        color: Theme.of(context).colorScheme.primary,
+        gradient: gradients?.beigeGradient,
         border: Border.all(
-          color: const Color(0xFF3A4801),
+          color: Theme.of(context).colorScheme.tertiary,
           width: 1.0, // 1px
         ),
         // boxShadow: [
@@ -45,11 +39,7 @@ class _SearchBarState extends State<CustomSearchBar> {
           Expanded(
             // TODO wert aus TextField speichern
             child: TextField(
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
               decoration: InputDecoration(
                 hintText: 'Search...',
                 border: InputBorder.none,
@@ -59,7 +49,11 @@ class _SearchBarState extends State<CustomSearchBar> {
           Container(width: 5, color: const Color(0xFF000000)),
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.search, color: const Color(0xFF4E0F19), size: 32),
+            icon: Icon(
+              Icons.search,
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: 32,
+            ),
           ),
         ],
       ),

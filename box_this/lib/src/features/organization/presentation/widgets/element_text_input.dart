@@ -27,12 +27,7 @@ class ElementTextInput extends StatelessWidget {
               maxLines: null,
               minLines: 3,
               keyboardType: TextInputType.multiline,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontSize: 16,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w400,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
               decoration: InputDecoration(
                 hintText: hintText,
                 border: InputBorder.none,

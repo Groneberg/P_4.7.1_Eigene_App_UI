@@ -1,3 +1,4 @@
+import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -17,15 +18,12 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gradients = Theme.of(context).extension<GradientsExtension>();
+
     return AppBar(
       flexibleSpace: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [const Color(0xFF3A4801), const Color(0xFF7D9200)],
-            stops: [0.0, 1.0],
-          ),
+          gradient: gradients?.greenGradient,
           border: Border.all(color: Theme.of(context).colorScheme.tertiary),
         ),
       ),
@@ -50,13 +48,7 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
           Text(
             title,
             textAlign: TextAlign.end,
-            style: TextStyle(
-              // TODO Schriftart anpassen
-              fontFamily: 'Roboto',
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
       ),
@@ -83,8 +75,8 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
             'assets/svg/icons/$icon.svg', // Passe den Pfad zu deinem SVG an
             width: 32,
             height: 32,
-            colorFilter: const ColorFilter.mode(
-              Color(0xFFFAFAFA),
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.primary,
               BlendMode.srcIn,
             ), // SVG einfärben
           ),

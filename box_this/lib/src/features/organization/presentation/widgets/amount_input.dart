@@ -31,11 +31,7 @@ class _AmountInputState extends State<AmountInput> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
                 textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge,
                 decoration: InputDecoration(
                   // TODO TextEditingController
                   hintText: "0",
@@ -47,7 +43,7 @@ class _AmountInputState extends State<AmountInput> {
         ),
         // TODO ausrichtung der icons
         IconButton(
-          
+          padding: EdgeInsets.all(0),
           onPressed: () {},
           icon: Icon(
             Icons.add,
@@ -55,7 +51,9 @@ class _AmountInputState extends State<AmountInput> {
             size: 40,
           ),
         ),
+        SizedBox(width: 8,),
         IconButton(
+          padding: EdgeInsets.all(0),
           onPressed: () {},
           icon: Icon(
             Icons.remove,

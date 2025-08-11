@@ -1,3 +1,4 @@
+import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 
 class ButtonCreateBox extends StatefulWidget {
@@ -10,20 +11,17 @@ class ButtonCreateBox extends StatefulWidget {
 class _ButtonCreateBoxState extends State<ButtonCreateBox> {
   @override
   Widget build(BuildContext context) {
+    final gradients = Theme.of(context).extension<GradientsExtension>();
+
     return Container(
       width: 80,
       height: 80,
       decoration: BoxDecoration(
         border: Border.all(
-          color: const Color(0xFF3A4801),
+          color: Theme.of(context).colorScheme.tertiary,
           width: 1.0, // 1px
         ),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [const Color(0xFFF1D5AE), const Color(0xFFDBB77F), const Color(0xFFDFB983)],
-          stops: [0.0, 0.5564, 1.0],
-        ),
+        gradient: gradients?.beigeGradient,
       ),
       child: Center(
         child: Container(
@@ -31,17 +29,16 @@ class _ButtonCreateBoxState extends State<ButtonCreateBox> {
           height: 40,
           decoration: BoxDecoration(
             border: Border.all(
-              color: const Color(0xFF3A4801),
+              color: Theme.of(context).colorScheme.tertiary,
               width: 2.0, // 1px
             ),
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [const Color(0xFFF1D5AE), const Color(0xFFDBB77F), const Color(0xFFDFB983)],
-              stops: [0.0, 0.5564, 1.0],
-            ),
+            gradient: gradients?.beigeGradient,
           ),
-          child: Icon(Icons.add, color: const Color(0xFF4E0F19), size: 36),
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.onPrimary,
+            size: 36,
+          ),
         ),
       ),
     );

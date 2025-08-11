@@ -20,7 +20,7 @@ class _ListElementState extends State<ListElement> {
       padding: EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
         border: Border.all(
-          color: const Color(0xFF3A4801),
+          color: Theme.of(context).colorScheme.tertiary,
           width: 1.0, // 1px
         ),
       ),
@@ -49,11 +49,7 @@ class _ListElementState extends State<ListElement> {
               Expanded(
                 child: Text(
                   "Garden",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF4E0F19),
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
@@ -62,11 +58,15 @@ class _ListElementState extends State<ListElement> {
                   spacing: 16,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.edit, color: const Color(0xFF4E0F19), size: 24),
+                    Icon(
+                      Icons.edit,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 24,
+                    ),
                     // SizedBox(width: 16,),
                     Icon(
                       Icons.delete,
-                      color: const Color(0xFF4E0F19),
+                      color: Theme.of(context).colorScheme.onPrimary,
                       size: 24,
                     ),
                   ],
@@ -82,11 +82,7 @@ class _ListElementState extends State<ListElement> {
                 width: 60,
                 child: Text(
                   "Items",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF4E0F19),
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
@@ -95,22 +91,14 @@ class _ListElementState extends State<ListElement> {
                   //
                   "0",
                   textAlign: TextAlign.end,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF4E0F19),
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
                 width: 60,
                 child: Text(
                   "Events",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF4E0F19),
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
@@ -118,11 +106,7 @@ class _ListElementState extends State<ListElement> {
                 child: Text(
                   "0",
                   textAlign: TextAlign.end,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF4E0F19),
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
             ],

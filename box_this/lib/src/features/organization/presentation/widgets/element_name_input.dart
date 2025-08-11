@@ -41,11 +41,7 @@ class ElementNameInput extends StatelessWidget {
             ),
             child: TextField(
               textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
               decoration: InputDecoration(
                 hintText: hintText,
                 border: InputBorder.none,

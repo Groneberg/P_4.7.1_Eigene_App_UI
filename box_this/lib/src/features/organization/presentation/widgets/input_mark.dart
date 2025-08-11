@@ -1,3 +1,4 @@
+import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 
 class InputMark extends StatelessWidget {
@@ -7,19 +8,12 @@ class InputMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gradients = Theme.of(context).extension<GradientsExtension>();
     return Container(
       width: 8,
       height: 20,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            const Color(0xFF3A4801),
-            const Color(0xFF7D9200),
-          ],
-          stops: [0.0, 1.0],
-        ),
+        gradient: gradients?.greenGradient,
         border: Border.all(
           color: Theme.of(context).colorScheme.tertiary,
         ),
