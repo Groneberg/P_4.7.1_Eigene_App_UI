@@ -4,9 +4,13 @@ import 'package:flutter_svg/svg.dart';
 class ElementNameInput extends StatelessWidget {
   final String icon;
   final String hintText;
+  final TextEditingController boxTextEditingController;
 
   const ElementNameInput({
-    super.key, required this.icon, required this.hintText,
+    super.key,
+    required this.icon,
+    required this.hintText,
+    required this.boxTextEditingController,
   });
 
   @override
@@ -35,11 +39,10 @@ class ElementNameInput extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.only(right: 8),
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Theme.of(context).colorScheme.tertiary,
-              ),
+              border: Border.all(color: Theme.of(context).colorScheme.tertiary),
             ),
-            child: TextField(
+            child: TextFormField(
+              controller: boxTextEditingController,
               textAlign: TextAlign.right,
               style: Theme.of(context).textTheme.bodyLarge,
               decoration: InputDecoration(

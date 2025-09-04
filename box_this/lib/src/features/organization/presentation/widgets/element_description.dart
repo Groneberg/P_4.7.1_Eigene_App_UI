@@ -48,13 +48,7 @@ class _ElementDescriptionState extends State<ElementDescription> {
                 child: Text(
                   "less",
                   textAlign: TextAlign.end,
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.onPrimary.withAlpha(160),
-                  ),
-                  
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
             ],

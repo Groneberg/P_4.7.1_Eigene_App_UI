@@ -37,26 +37,28 @@ class AppTheme {
         fontWeight: FontWeight.w400,
         color: Color.fromRGBO(78, 15, 25, 1.0), // Heath
       ),
+      labelLarge: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: Color.fromRGBO(250, 250, 250, 1), // Alabaster
+      )
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black87,
-    ),
-      extensions: <ThemeExtension<dynamic>>[
-        const GradientsExtension(
-          greenGradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Color(0xFF3A4801), Color(0xFF7D9200)],
-            stops: [0.0, 1.0],
-          ),
-          beigeGradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Color(0xFFF1D5AE), Color(0xFFDBB77F), Color(0xFFDFB983)],
-            stops: [0.0, 0.5564, 1.0],
-          ),
+    extensions: <ThemeExtension<dynamic>>[
+      const GradientsExtension(
+        greenGradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Color(0xFF3A4801), Color(0xFF7D9200)],
+          stops: [0.0, 1.0],
         ),
-      ],
+        beigeGradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Color(0xFFF1D5AE), Color(0xFFDBB77F), Color(0xFFDFB983)],
+          stops: [0.0, 0.5564, 1.0],
+        ),
+      ),
+    ],
   );
 }

@@ -1,17 +1,34 @@
+import 'package:box_this/src/data/model/box.dart';
+import 'package:box_this/src/data/model/event.dart';
+import 'package:box_this/src/data/model/item.dart';
+import 'package:box_this/src/data/repositories/mock_database_repository.dart';
+import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ListElement extends StatefulWidget {
-  // Box box;
-  // Item item;
-  // Event event;
-  const ListElement({super.key});
+  final dynamic element;
+  final VoidCallback onDelete;
+  const ListElement({super.key, required this.element, required this.onDelete});
 
   @override
   State<ListElement> createState() => _ListElementState();
 }
 
 class _ListElementState extends State<ListElement> {
+
+  String getElementTyp() {
+    if (widget.element is Box) {
+      return "box";
+    } else if (widget.element is Item) {
+      return "item";
+    } else if (widget.element is Event) {
+      return "event";
+    } else {
+      return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +53,7 @@ class _ListElementState extends State<ListElement> {
               // ),
               // TODO Variable für svg
               SvgPicture.asset(
-                "assets/svg/icons/box_icon.svg",
+                "assets/svg/icons/${getElementTyp()}_icon.svg",
                 colorFilter: ColorFilter.mode(
                   Theme.of(context).colorScheme.onPrimary,
                   BlendMode.srcIn,
@@ -47,27 +64,45 @@ class _ListElementState extends State<ListElement> {
               SizedBox(width: 16),
               // widget.box.name
               Expanded(
-                child: Text(
-                  "Garden",
-                  style: Theme.of(context).textTheme.bodyLarge,
+                child: GestureDetector(
+                  onTap: () {
+                    navigateToBoxDetailScreen(context);
+                  },
+                  child: Text(
+                    widget.element.name,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               ),
               SizedBox(
                 width: 72,
                 child: Row(
-                  spacing: 16,
+                  spacing: 24,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      Icons.edit,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      size: 24,
+                    GestureDetector(
+                      onTap: () {
+                        // TODO später Navigation zu Edit Screen
+                      },
+                      child: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 24,
+                      ),
                     ),
                     // SizedBox(width: 16,),
-                    Icon(
-                      Icons.delete,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      size: 24,
+                    GestureDetector(
+                      onTap: () {
+                        MockDatabaseRepository.instance.deleteBox(
+                          widget.element.name,
+                        );
+                        widget.onDelete();
+                      },
+                      child: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 24,
+                      ),
                     ),
                   ],
                 ),
@@ -89,7 +124,7 @@ class _ListElementState extends State<ListElement> {
                 width: 60,
                 child: Text(
                   //
-                  "0",
+                  widget.element.items.length.toString(),
                   textAlign: TextAlign.end,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -104,7 +139,7 @@ class _ListElementState extends State<ListElement> {
               SizedBox(
                 width: 60,
                 child: Text(
-                  "0",
+                  widget.element.events.length.toString(),
                   textAlign: TextAlign.end,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -113,6 +148,23 @@ class _ListElementState extends State<ListElement> {
           ),
         ],
       ),
+    );
+  }
+
+  // TODO später Navigation anpassen / EditBoxScreen bauen
+  // void navigateToEditBoxScreen(BuildContext context) {
+  //   Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //     builder: (context) => EditBoxScreen(),
+  //   ),
+  // );
+
+  void navigateToBoxDetailScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      // TODO navigation anpassen für Item und Event
+      MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
     );
   }
 }

@@ -30,7 +30,7 @@ class CreateItemScreen extends StatelessWidget {
               child: Column(
                 spacing: 24,
                 children: [
-                  ElementNameInput(icon: "item_icon", hintText: "Itemname...",),
+                  // ElementNameInput(icon: "item_icon", hintText: "Itemname...",),
                   ElementTextInput(labelName: "Description", hintText: "Description..."),
                   ElementTextInput(labelName: "Location", hintText: "Location..."),
                   AmountInput(labelName: "Amount"),

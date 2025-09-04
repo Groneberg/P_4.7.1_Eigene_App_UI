@@ -1,5 +1,6 @@
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 
@@ -21,6 +22,10 @@ class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
     final gradients = Theme.of(context).extension<GradientsExtension>();
 
     return AppBar(
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark,
+        statusBarColor: Colors.black,
+      ),
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: gradients?.greenGradient,
