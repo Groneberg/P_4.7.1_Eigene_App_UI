@@ -29,6 +29,58 @@ class _ListElementState extends State<ListElement> {
     }
   }
 
+  String getFirstLabelByTyp(String typ) {
+    switch (typ) {
+      case "box":
+        return "Items";
+      case "item":
+        return "Amount";
+      case "event":
+        return "Date";
+      default:
+        return "";
+    }
+  }
+
+  String getFirstValueByTyp(String typ) {
+    switch (typ) {
+      case "box":
+        return widget.element.items.length.toString();
+      case "item":
+        return widget.element.amount.toString();
+      case "event":
+        return widget.element.date.toString();
+      default:
+        return "";
+    }
+  }
+
+  String getSecondLabelByTyp(String typ) {
+    switch (typ) {
+      case "box":
+        return "Events";
+      case "item":
+        return "Min. Amount";
+      case "event":
+        return "Time";
+      default:
+        return "";
+    }
+  }
+
+  String getSecondValueByTyp(String typ) {
+    switch (typ) {
+      case "box":
+        return widget.element.events.length.toString();
+      case "item":
+        return widget.element.minAmount.toString();
+      case "event":
+        return widget.element.time.toString();
+      default:
+        return "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,7 +114,6 @@ class _ListElementState extends State<ListElement> {
                 height: 32,
               ),
               SizedBox(width: 16),
-              // widget.box.name
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -90,7 +141,6 @@ class _ListElementState extends State<ListElement> {
                         size: 24,
                       ),
                     ),
-                    // SizedBox(width: 16,),
                     GestureDetector(
                       onTap: () {
                         MockDatabaseRepository.instance.deleteBox(
@@ -114,32 +164,31 @@ class _ListElementState extends State<ListElement> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: 60,
+                width: 70,
                 child: Text(
-                  "Items",
+                  getFirstLabelByTyp(getElementTyp()),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
-                width: 60,
+                width: 70,
                 child: Text(
-                  //
-                  widget.element.items.length.toString(),
+                  getFirstValueByTyp(getElementTyp()),
                   textAlign: TextAlign.end,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
-                width: 60,
+                width: 70,
                 child: Text(
-                  "Events",
+                  getSecondLabelByTyp(getElementTyp()),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
-                width: 60,
+                width: 70,
                 child: Text(
-                  widget.element.events.length.toString(),
+                  getSecondValueByTyp(getElementTyp()),
                   textAlign: TextAlign.end,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),

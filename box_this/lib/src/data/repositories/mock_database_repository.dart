@@ -35,6 +35,9 @@ class MockDatabaseRepository implements DatabaseRepository {
     // Initialize with some default boxes if needed
     mainBox.boxes = boxes;
     currentBox.boxes = boxes;
+
+    mainBox.boxes["Garden"]!.addBox(Box(name: "Tools", description: ""));
+    mainBox.boxes["Garden"]!.addItem(Item("Rake","", 0,0));
   }
 
   // Future<void> initializePersistence() async {

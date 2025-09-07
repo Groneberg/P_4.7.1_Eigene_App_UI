@@ -19,18 +19,21 @@ class _BuildWidgetScreenState extends State<BuildWidgetScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            // child: UserPromptAlertDialog(promptText: "Delete Box?")
-            child: AccordionList(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AccordionList(
               typ: "Box",
               box: MockDatabaseRepository.instance.currentBox,
               
-            )
-          ),
-        ],
+            ),
+            AccordionList(
+              typ: "Item",
+              box: MockDatabaseRepository.instance.currentBox.boxes["Garden"]!,
+              
+            ),
+          ],
+        ),
       ),
     );
   }
