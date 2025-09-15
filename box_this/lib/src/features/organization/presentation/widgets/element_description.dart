@@ -16,6 +16,7 @@ class ElementDescription extends StatefulWidget {
 }
 
 class _ElementDescriptionState extends State<ElementDescription> {
+  bool _isExtended = true;
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +46,22 @@ class _ElementDescriptionState extends State<ElementDescription> {
                 ),
               ),
               Expanded(
-                child: Text(
-                  "less",
-                  textAlign: TextAlign.end,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isExtended = !_isExtended;
+                    });
+                  },
+                  child: Text(
+                    _isExtended ? "less" : "more",
+                    textAlign: TextAlign.end,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                 ),
               ),
             ],
           ),
+          if (_isExtended)
           Row(
             children: [
               Container(

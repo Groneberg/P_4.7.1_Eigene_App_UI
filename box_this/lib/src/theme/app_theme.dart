@@ -42,7 +42,13 @@ class AppTheme {
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: Color.fromRGBO(250, 250, 250, 1), // Alabaster
-      )
+      ),
+      labelMedium: TextStyle(
+        color: Color(0x8F4E0F19),
+        fontSize: 12,
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w400,
+      ),
     ),
     extensions: <ThemeExtension<dynamic>>[
       const GradientsExtension(
