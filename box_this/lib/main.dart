@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/mock_database_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
+import 'package:box_this/src/features/login/screens/login_register_test_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/build_widget_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
@@ -48,7 +49,8 @@ class MainApp extends StatelessWidget {
           // child: CreateBoxScreen(),
           // child: BoxDetailScreen(),
           // child: CreateItemScreen(),
-          child: BuildWidgetScreen(),
+          // child: BuildWidgetScreen(),
+          child: AuthScreen(),
         ),
       ),
     );
