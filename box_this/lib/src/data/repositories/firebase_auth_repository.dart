@@ -35,6 +35,16 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> deleteAccount() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.delete();
+    } else {
+      return Future.value();
+    }
+  }
+
+  @override
   Stream<User?> authStateChanges() {
     return FirebaseAuth.instance.authStateChanges();
   }
