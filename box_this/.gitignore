@@ -50,3 +50,6 @@ app.*.map.json
 /macos/Runner/GoogleService-Info.plist
 /lib/firebase_options.dart
 /ios/Runner/GoogleService-Info.plist
+box_this/macos/Runner/GoogleService-Info.plist
+box_this/lib/firebase_options.dart
+box_this/ios/Runner/GoogleService-Info.plist
