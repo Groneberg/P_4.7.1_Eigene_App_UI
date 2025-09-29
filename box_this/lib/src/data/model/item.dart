@@ -2,14 +2,16 @@ import 'Event.dart';
 
 /// Represents an item with a name, description, amount, and associated events.
 class Item {
+  String? id;
+  String? parentId;
+
   String name;
   String description;
   int amount = 0;
   int minAmount = 0;
-  // map vielleicht besser ?
   Map<String, Event> events = {};
 
-  Item(this.name, this.description, this.amount, this.minAmount);
+  Item({  id = "", parentId = "", required this.name, required this.description, this.amount = 0, this.minAmount = 0});
 
   /// Factory constructor to create an Item instance from a JSON map.
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -20,10 +22,10 @@ class Item {
     );
 
     return Item(
-      json['name'] as String,
-      json['description'] as String,
-      json['amount'] as int,
-      json['minAmount'] as int,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      amount: json['amount'] as int,
+      minAmount: json['minAmount'] as int,
     )..events = reconstructedEvents; // Fügt die rekonstruierten Events hinzu
   }
 

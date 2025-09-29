@@ -3,13 +3,15 @@ import 'package:box_this/src/data/model/item.dart';
 
 /// Represents a box that can contain other boxes, items, and events.
 class Box {
+  String? id;
+  String? parentId;
   String name;
   String description;
   Map<String,Box> boxes = {};
   Map<String,Item> items = {};
   Map<String,Event> events = {};
 
-  Box({required this.name, required this.description});
+  Box({id = "", parentId = "", required this.name, required this.description});
 
   /// Factory constructor to create a Box instance from a JSON map.
   factory Box.fromJson(Map<String, dynamic> json) {

@@ -1,19 +1,23 @@
 /// Represents an event with a name, time, date, and description.
 class Event {
+  String? id;
+  String? parentId;
   String name;
   String time;
   String date;
   String description;
 
-  Event(this.name, this.time, this.date, this.description);
+  Event({id = "", parentId = "" ,required this.name, required this.time, required this.date, required this.description});
 
   /// Factory constructor to create an Event instance from a JSON map.
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      json['name'] as String,
-      json['time'] as String,
-      json['date'] as String,
-      json['description'] as String,
+      name: json['name'] as String,
+      time: json['time'] as String,
+      date: json['date'] as String,
+      description: json['description'] as String,
+      id: json['id'] ?? "",
+      parentId: json['parentId'] ?? "",
     );
   }
 
