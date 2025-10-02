@@ -45,8 +45,6 @@ app.*.map.json
 /android/app/release
 
 # ignore files from android and ios directories
-
-
 /macos/Runner/GoogleService-Info.plist
 /lib/firebase_options.dart
 /ios/Runner/GoogleService-Info.plist
