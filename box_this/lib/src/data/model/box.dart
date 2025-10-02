@@ -7,37 +7,42 @@ class Box {
   String? parentId;
   String name;
   String description;
-  Map<String,Box> boxes = {};
-  Map<String,Item> items = {};
-  Map<String,Event> events = {};
+  Map<String, Box> boxes = {};
+  Map<String, Item> items = {};
+  Map<String, Event> events = {};
 
   Box({id = "", parentId = "", required this.name, required this.description});
 
   /// Factory constructor to create a Box instance from a JSON map.
   factory Box.fromJson(Map<String, dynamic> json) {
-    var boxesMap = json['boxes'] as Map<String, dynamic>;
+    var boxesMap = json['boxes'] as Map<String, dynamic>? ?? {};
     Map<String, Box> reconstructedBoxes = boxesMap.map(
-      (key, value) => MapEntry(key, Box.fromJson(value as Map<String, dynamic>)),
+      (key, value) =>
+          MapEntry(key, Box.fromJson(value as Map<String, dynamic>)),
     );
 
-    var itemsMap = json['items'] as Map<String, dynamic>;
+    var itemsMap = json['items'] as Map<String, dynamic>? ?? {};
     Map<String, Item> reconstructedItems = itemsMap.map(
-      (key, value) => MapEntry(key, Item.fromJson(value as Map<String, dynamic>)),
+      (key, value) =>
+          MapEntry(key, Item.fromJson(value as Map<String, dynamic>)),
     );
 
-    var eventsMap = json['events'] as Map<String, dynamic>;
+    var eventsMap = json['events'] as Map<String, dynamic>? ?? {};
     Map<String, Event> reconstructedEvents = eventsMap.map(
-      (key, value) => MapEntry(key, Event.fromJson(value as Map<String, dynamic>)),
+      (key, value) =>
+          MapEntry(key, Event.fromJson(value as Map<String, dynamic>)),
     );
 
     return Box(
-      name: json['name'] as String,
-      description: json['description'] as String,
-    )..boxes = reconstructedBoxes
-     ..items = reconstructedItems
-     ..events = reconstructedEvents;
+        id: json['id'] as String?,
+        parentId: json['parentId'] as String?,
+        name: json['name'] as String,
+        description: json['description'] as String,
+      )
+      ..boxes = reconstructedBoxes
+      ..items = reconstructedItems
+      ..events = reconstructedEvents;
   }
-
 
   /// Adds a sub-box to the current box.
   /// This allows for creating a hierarchy of boxes.
@@ -121,21 +126,44 @@ class Box {
     this.events[name] = event;
   }
 
-    Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> jsonString = {
       'name': name,
       'description': description,
-      'boxes': boxes.map((key, value) => MapEntry(key, value.toJson())),
-      'items': items.map((key, value) => MapEntry(key, value.toJson())),
-      'events': events.map((key, value) => MapEntry(key, value.toJson())),
     };
-  }
 
+    if (id != null && id!.isNotEmpty) {
+      jsonString['id'] = id;
+    }
+
+    if (parentId != null && parentId!.isNotEmpty) {
+      jsonString['parentId'] = parentId;
+    }
+
+    if (boxes.isNotEmpty) {
+      jsonString['boxes'] = boxes.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      );
+    }
+
+    if (items.isNotEmpty) {
+      jsonString['items'] = items.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      );
+    }
+
+    if (events.isNotEmpty) {
+      jsonString['events'] = events.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      );
+    }
+
+    return jsonString;
+  }
 
   // TODO bessere umsetzung der Informationen
   @override
   String toString() {
-    return 'Name: ${this.name}\n'
-        'Description: ${this.description}';
+    return 'Box(id: ${id ?? ""}, parentId: ${parentId ?? ""} name: $name, description: $description, boxes: ${boxes.keys.toList()}, items: ${items.keys.toList()}, events: ${events.keys.toList()})';
   }
 }

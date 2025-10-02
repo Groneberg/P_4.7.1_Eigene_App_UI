@@ -11,17 +11,26 @@ class Item {
   int minAmount = 0;
   Map<String, Event> events = {};
 
-  Item({  id = "", parentId = "", required this.name, required this.description, this.amount = 0, this.minAmount = 0});
+  Item({
+    id = "",
+    parentId = "",
+    required this.name,
+    required this.description,
+    this.amount = 0,
+    this.minAmount = 0,
+  });
 
   /// Factory constructor to create an Item instance from a JSON map.
   factory Item.fromJson(Map<String, dynamic> json) {
-    var eventsMap = json['events'] as Map<String, dynamic>;
+    var eventsMap = json['events'] as Map<String, dynamic>? ?? {};
     Map<String, Event> reconstructedEvents = eventsMap.map(
       (key, value) =>
           MapEntry(key, Event.fromJson(value as Map<String, dynamic>)),
     );
 
     return Item(
+      id: json['id'] as String?,
+      parentId: json['parentId'] as String?,
       name: json['name'] as String,
       description: json['description'] as String,
       amount: json['amount'] as int,
@@ -36,13 +45,20 @@ class Item {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> jsonString = {
       'name': name,
       'description': description,
       'amount': amount,
       'minAmount': minAmount,
-      'events': events.map((key, value) => MapEntry(key, value.toJson())),
     };
+
+    if (events.isNotEmpty) {
+      jsonString['events'] = events.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      );
+    }
+
+    return jsonString;
   }
 
   // TODO bessere umsetzung der Informationen

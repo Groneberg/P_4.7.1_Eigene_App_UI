@@ -23,6 +23,8 @@ class Event {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'parentId': parentId,
       'name': name,
       'time': time,
       'date': date,
