@@ -26,7 +26,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final FirestoreDatabaseRepository repository = FirestoreDatabaseRepository();
-  final MockDatabaseRepository repository = MockDatabaseRepository();
+  final MockDatabaseRepository mockDatabaseRepository= MockDatabaseRepository();
   // final SharedPreferencesRepository repository =
   //     SharedPreferencesRepository.instance;
   // await repository.initializePersistence();
@@ -34,8 +34,8 @@ void main() async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await runExampleAuthAndInit();
 
-  // final authRepo = FirebaseAuthRepository.instance;
-  // final dbRepo = FirestoreDatabaseRepository.instance;
+  final authRepo = FirebaseAuthRepository.instance;
+  final dbRepo = FirestoreDatabaseRepository.instance;
 
 
   // final email = 'testuser@example.com';
@@ -60,7 +60,20 @@ void main() async {
 
   // runApp(const MainApp());
   runApp(
-    const ChangeNotifierProvider()
+    MultiProvider(
+      providers: [
+        Provider<FirebaseAuthRepository>(
+          create: (_) => authRepo,
+        ),
+        Provider<FirestoreDatabaseRepository>(
+          create: (_) => dbRepo,
+        ),
+        Provider<MockDatabaseRepository>(
+          create: (_) => mockDatabaseRepository,
+        ),
+      ],
+      child: MainApp(),
+    )
   );
 }
 
