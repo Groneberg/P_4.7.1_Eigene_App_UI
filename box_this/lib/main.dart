@@ -21,6 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 
+import 'package:provider/provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final FirestoreDatabaseRepository repository = FirestoreDatabaseRepository();
@@ -28,48 +30,38 @@ void main() async {
   // final SharedPreferencesRepository repository =
   //     SharedPreferencesRepository.instance;
   // await repository.initializePersistence();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await runExampleAuthAndInit();
 
-  final authRepo = FirebaseAuthRepository.instance;
-  final dbRepo = FirestoreDatabaseRepository.instance;
-  final email = 'testuser@example.com';
-  final password = 'password123';
+  // final authRepo = FirebaseAuthRepository.instance;
+  // final dbRepo = FirestoreDatabaseRepository.instance;
 
-  try {
-    await authRepo.signInWithEmailAndPassword(email, password);
-    log('Anmeldung erfolgreich.');
 
-  } catch (e) {
-    log('Fehler bei der Anmeldung: $e');
-  }
-  await dbRepo.initFireStoreDatabase();
-  await dbRepo.createBox(
-    Box(name: "testBox2", description: "Iam a test box"),
-  );
-  await dbRepo.createEvent(Event(name: "test", time: "12:12", date: "12.12.1212", description: ""));
-  await dbRepo.createItem(
-    Item(name: "testItem2", description: "Iam a test item"),
-  );
-  log(await dbRepo.readBox("testBox2").toString());
-  log(await dbRepo.readEvent("test").toString());
-  log(await dbRepo.readItem("testItem2").toString());
-  // log(dbRepo.readBox("testBox").toString());
-  await dbRepo.updateBox(Box(name: "testBox28", description: "Iam an updated test box"));
-  await dbRepo.updateEvent(Event(name: "testupdate", time: "14:14", date: "14.14.1414", description: "updated event"));
-  await dbRepo.updateItem(Item(name: "testItem28", description: "Iam an updated test item"));
+  // final email = 'testuser@example.com';
+  // final password = 'password123';
 
-  await dbRepo.deleteEvent("test");
-  await dbRepo.deleteItem("testItem2");
-  await dbRepo.deleteBox("testBox2");
-  await dbRepo.deleteBox("testBox2");
+  // try {
+  //   await authRepo.signInWithEmailAndPassword(email, password);
+  //   log('Anmeldung erfolgreich.');
+
+  // } catch (e) {
+  //   log('Fehler bei der Anmeldung: $e');
+  // }
+  // await dbRepo.initFireStoreDatabase();
+  // await dbRepo.createBox(
+  // Hier fehlt vermutlich ein Argument, z.B. ein Box-Objekt:
+  // await dbRepo.createBox(Box(name: "TestBox", description: "Test box"));
 
   // Optional: Melde dich nach dem Test ab
-  await authRepo.signOut();
-  log('Nutzer erfolgreich abgemeldet.');
+  // await authRepo.signOut();
+  // log('Nutzer erfolgreich abgemeldet.');
   // log('--- Ende Authentifizierungs- und Initialisierungs-Test ---');
 
-  runApp(const MainApp());
+  // runApp(const MainApp());
+  runApp(
+    const ChangeNotifierProvider()
+  );
 }
 
 Future<void> runExampleAuthAndInit() async {
@@ -135,9 +127,9 @@ class MainApp extends StatelessWidget {
           // child: CreateBoxScreen(),
           // child: BoxDetailScreen(),
           // child: CreateItemScreen(),
-          // child: BuildWidgetScreen(),
+          child: BuildWidgetScreen(),
           // child: AuthScreen(),
-          child: FirestoreTestScreen(),
+          // child: FirestoreTestScreen(),
         ),
       ),
     );
