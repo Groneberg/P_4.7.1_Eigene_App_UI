@@ -207,8 +207,15 @@ class _ListElementState extends State<ListElement> {
   void navigateToBoxDetailScreen(BuildContext context) {
     Navigator.push(
       context,
-      // TODO navigation anpassen für Item und Event
-      MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) => BoxDetailScreen(box: widget.element),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // // TODO navigation anpassen für Item und Event
+      // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
     );
   }
 }

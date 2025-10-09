@@ -179,9 +179,16 @@ class CreateBoxScreen extends StatelessWidget {
   void navigatetoHomeScreen(BuildContext context) {
     Navigator.push(
     context,
-    MaterialPageRoute(
-      builder: (context) => HomeScreen(),
+    PageRouteBuilder(
+      transitionDuration: Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: animation, child: child);
+      }
     ),
+    // MaterialPageRoute(
+    //   builder: (context) => HomeScreen(),
+    // ),
   );
 }
 

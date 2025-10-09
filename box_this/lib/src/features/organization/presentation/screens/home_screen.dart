@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadBoxes() async {
     setState(() {
       SharedPreferencesRepository.instance.initializePersistence();
-      _futureBoxes = SharedPreferencesRepository.instance.readMainBoxStructure();
+      _futureBoxes = SharedPreferencesRepository.instance
+          .readMainBoxStructure();
     });
   }
 
@@ -47,8 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
           CustomSearchBar(),
           // TODO später dynamisch und aus liste / akkordion
           Consumer<SharedPreferencesRepository>(
-            builder: (context, databaseRepository, child) =>
-              Expanded(
+            builder: (context, databaseRepository, child) => Expanded(
               child: FutureBuilder(
                 // future: databaseRepository.readMainBoxStructure(),
                 future: _futureBoxes,
@@ -67,20 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: databaseRepository
-                              .mainBox
-                              .boxes
-                              .length,
+                          itemCount: databaseRepository.mainBox.boxes.length,
                           itemBuilder: (context, index) {
-                            String key = databaseRepository
-                                .mainBox
-                                .boxes
-                                .keys
+                            String key = databaseRepository.mainBox.boxes.keys
                                 .elementAt(index);
                             return ListElement(
-                              element: databaseRepository
-                                  .mainBox
-                                  .boxes[key]!,
+                              element: databaseRepository.mainBox.boxes[key]!,
                               onDelete: () {
                                 databaseRepository.deleteBox(key);
                                 _loadBoxes();
@@ -121,11 +113,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void navigatetoCreateBoxScreen(BuildContext context) {
-     Navigator.push(
+    Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => CreateBoxScreen(),
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) => CreateBoxScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
       ),
+      // MaterialPageRoute(
+      //   builder: (context) => CreateBoxScreen(),
+      // ),
     );
   }
 }
