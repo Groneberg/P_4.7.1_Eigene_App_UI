@@ -38,7 +38,12 @@ class CreateItemScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      SmallActionButton(svgIconPath: "assets/svg/icons/event2_icon.svg")
+                      SmallActionButton(
+                        svgIconPath: "assets/svg/icons/event2_icon.svg",
+                        onPressed: () {
+                          
+                        },
+                      ),
                     ],
                   )
                 ],

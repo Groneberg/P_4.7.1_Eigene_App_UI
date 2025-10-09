@@ -9,6 +9,7 @@ import 'package:box_this/src/features/organization/presentation/screens/create_b
 import 'package:box_this/src/features/organization/presentation/widgets/button_create_box.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/list_element.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,13 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadBoxes() async {
     setState(() {
-      _futureBoxes = MockDatabaseRepository.instance.readMainBoxStructure();
+      SharedPreferencesRepository.instance.initializePersistence();
+      _futureBoxes = SharedPreferencesRepository.instance.readMainBoxStructure();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // final MockDatabaseRepository repository = MockDatabaseRepository.instance;
+    // final SharedPreferencesRepository repository = SharedPreferencesRepository.instance;
     // final SharedPreferencesRepository repository = SharedPreferencesRepository.instance;
 
     return Scaffold(
@@ -44,67 +46,69 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CustomSearchBar(),
           // TODO später dynamisch und aus liste / akkordion
-          Expanded(
-            child: FutureBuilder(
-              future: MockDatabaseRepository.instance.readMainBoxStructure(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      strokeWidth: 8,
-                    ),
-                  );
-                } else if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData) {
-                  return Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: MockDatabaseRepository
-                            .instance
-                            .mainBox
-                            .boxes
-                            .length,
-                        itemBuilder: (context, index) {
-                          String key = MockDatabaseRepository
-                              .instance
+          Consumer<SharedPreferencesRepository>(
+            builder: (context, databaseRepository, child) =>
+              Expanded(
+              child: FutureBuilder(
+                // future: databaseRepository.readMainBoxStructure(),
+                future: _futureBoxes,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        strokeWidth: 8,
+                      ),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData) {
+                    return Column(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: databaseRepository
                               .mainBox
                               .boxes
-                              .keys
-                              .elementAt(index);
-                          return ListElement(
-                            element: MockDatabaseRepository
-                                .instance
+                              .length,
+                          itemBuilder: (context, index) {
+                            String key = databaseRepository
                                 .mainBox
-                                .boxes[key]!,
-                            onDelete: () {
-                              _loadBoxes();
-                            },
-                          );
-                        },
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ButtonCreateBox(
-                              onPressed: () {
-                                navigatetoCreateBoxScreen(context);
+                                .boxes
+                                .keys
+                                .elementAt(index);
+                            return ListElement(
+                              element: databaseRepository
+                                  .mainBox
+                                  .boxes[key]!,
+                              onDelete: () {
+                                databaseRepository.deleteBox(key);
+                                _loadBoxes();
                               },
-                            ),
-                          ],
+                            );
+                          },
                         ),
-                      ),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                } else {
-                  return const Text("No data available");
-                }
-              },
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ButtonCreateBox(
+                                onPressed: () {
+                                  navigatetoCreateBoxScreen(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  } else {
+                    return const Text("No data available");
+                  }
+                },
+              ),
             ),
           ),
 

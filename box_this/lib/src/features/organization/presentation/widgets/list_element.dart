@@ -2,6 +2,7 @@ import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/mock_database_repository.dart';
+import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -98,12 +99,6 @@ class _ListElementState extends State<ListElement> {
         children: [
           Row(
             children: [
-              // Icon(
-              //   Icons.check_box_outline_blank,
-              //   color: const Color(0xFF4E0F19),
-              //   size: 32,
-              // ),
-              // TODO Variable für svg
               SvgPicture.asset(
                 "assets/svg/icons/${getElementTyp()}_icon.svg",
                 colorFilter: ColorFilter.mode(
@@ -143,9 +138,9 @@ class _ListElementState extends State<ListElement> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        MockDatabaseRepository.instance.deleteBox(
-                          widget.element.name,
-                        );
+                        // SharedPreferencesRepository.instance.deleteBox(
+                        //   widget.element.name,
+                        // );
                         widget.onDelete();
                       },
                       child: Icon(

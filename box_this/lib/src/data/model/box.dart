@@ -56,6 +56,8 @@ class Box {
     this.items[name] = item;
   }
 
+  /// Recursively searches for a box by its name within the current box and its sub-boxes.
+  /// Returns the Box if found, or null if not found.
   Box? findBoxByName(String boxName) {
     // Check if the current box matches the name
     if (this.name == boxName) {
@@ -71,6 +73,19 @@ class Box {
       }
     }
     // If no matching box is found, return null
+    return null;
+  }
+
+  Box? getParentBoxChildBoxName(String boxName) {
+    for (var boxEntry in boxes.entries) {
+      if (boxEntry.value.name == boxName) {
+        return this;
+      }
+      var parent = boxEntry.value.getParentBoxChildBoxName(boxName);
+      if (parent != null) {
+        return parent;
+      }
+    }
     return null;
   }
 

@@ -17,9 +17,10 @@ import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class CreateBoxScreen extends StatelessWidget {
-  final MockDatabaseRepository repository = MockDatabaseRepository();
+  // final MockDatabaseRepository repository = MockDatabaseRepository();
   // final SharedPreferencesRepository repository =
   //     SharedPreferencesRepository.instance;
   final TextEditingController boxNameController = TextEditingController();
@@ -135,32 +136,34 @@ class CreateBoxScreen extends StatelessWidget {
             ),
             // TODO neu bauen mit button widget ?
             // CreateButton(),
-            GestureDetector(
-              onTap: () {
-                log("mainBox before creating new box: ${repository.mainBox}");
-                repository.createBox(
-                  Box(
-                    name: boxNameController.text,
-                    description: boxDescriptionController.text,
+            Consumer<SharedPreferencesRepository>(
+              builder: (context, databaseRepository, child) => GestureDetector(
+                onTap: () {
+                  log("mainBox before creating new box: ${databaseRepository.mainBox}");
+                  databaseRepository.createBox(
+                    Box(
+                      name: boxNameController.text,
+                      description: boxDescriptionController.text,
+                    ),
+                  );
+                  log("Current Boxes: ${databaseRepository.currentBox.boxes}");
+                  navigatetoHomeScreen(context);
+                },
+                child: Container(
+                  height: 48,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    gradient: gradients?.greenGradient,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
                   ),
-                );
-                log("Current Boxes: ${repository.currentBox.boxes}");
-                navigatetoHomeScreen(context);
-              },
-              child: Container(
-                height: 48,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  gradient: gradients?.greenGradient,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    "Creat",
-                    style: Theme.of(context).textTheme.labelLarge,
-                    
+                  child: Center(
+                    child: Text(
+                      "Creat",
+                      style: Theme.of(context).textTheme.labelLarge,
+                      
+                    ),
                   ),
                 ),
               ),

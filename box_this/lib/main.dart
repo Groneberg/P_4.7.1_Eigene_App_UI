@@ -26,12 +26,14 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final FirestoreDatabaseRepository repository = FirestoreDatabaseRepository();
-  final MockDatabaseRepository mockDatabaseRepository= MockDatabaseRepository();
-  // final SharedPreferencesRepository repository =
-  //     SharedPreferencesRepository.instance;
+  // final MockDatabaseRepository databaseRepository= MockDatabaseRepository();
+  final SharedPreferencesRepository databaseRepository =
+      SharedPreferencesRepository.instance;
   // await repository.initializePersistence();
   
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+//Firebase / FireStore Setup
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await runExampleAuthAndInit();
 
   final authRepo = FirebaseAuthRepository.instance;
@@ -40,6 +42,7 @@ void main() async {
 
   // final email = 'testuser@example.com';
   // final password = 'password123';
+
 
   // try {
   //   await authRepo.signInWithEmailAndPassword(email, password);
@@ -68,8 +71,8 @@ void main() async {
         Provider<FirestoreDatabaseRepository>(
           create: (_) => dbRepo,
         ),
-        Provider<MockDatabaseRepository>(
-          create: (_) => mockDatabaseRepository,
+        ChangeNotifierProvider<SharedPreferencesRepository>(
+          create: (_) => databaseRepository,
         ),
       ],
       child: MainApp(),
@@ -136,11 +139,11 @@ class MainApp extends StatelessWidget {
           statusBarColor: Colors.transparent,
         ),
         child: SafeArea(
-          // child: HomeScreen(),
+          child: HomeScreen(),
           // child: CreateBoxScreen(),
-          // child: BoxDetailScreen(),
+          // child: BoxDetailScreen(box: MockDatabaseRepository.instance.mainBox.boxes[0]!),
           // child: CreateItemScreen(),
-          child: BuildWidgetScreen(),
+          // child: BuildWidgetScreen(),
           // child: AuthScreen(),
           // child: FirestoreTestScreen(),
         ),

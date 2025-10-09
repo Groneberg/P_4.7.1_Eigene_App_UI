@@ -4,30 +4,35 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SmallActionButton extends StatelessWidget {
   final String svgIconPath;
-  const SmallActionButton({super.key, required this.svgIconPath});
+  final VoidCallback onPressed;
+  
+  const SmallActionButton({super.key, required this.svgIconPath, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
-    return Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        gradient: gradients?.beigeGradient,
-        border: Border.all(
-          color: Theme.of(context).colorScheme.tertiary,
-          width: 2.0,
-        ),
-      ),
-      child: Center(
-        child: SvgPicture.asset(
-          svgIconPath,
-          colorFilter: ColorFilter.mode(
-            Theme.of(context).colorScheme.onPrimary,
-            BlendMode.srcIn,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 40,
+        width: 40,
+        decoration: BoxDecoration(
+          gradient: gradients?.beigeGradient,
+          border: Border.all(
+            color: Theme.of(context).colorScheme.tertiary,
+            width: 2.0,
           ),
-          width: 24,
-          height: 24,
+        ),
+        child: Center(
+          child: SvgPicture.asset(
+            svgIconPath,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.onPrimary,
+              BlendMode.srcIn,
+            ),
+            width: 24,
+            height: 24,
+          ),
         ),
       ),
     );

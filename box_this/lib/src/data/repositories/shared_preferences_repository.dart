@@ -5,9 +5,10 @@ import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/database_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesRepository implements DatabaseRepository {
+class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepository {
   Box mainBox = Box(name: "mainBox", description: "");
   Box currentBox = Box(name: "currentBox", description: "");
 
@@ -47,47 +48,66 @@ class SharedPreferencesRepository implements DatabaseRepository {
     // convert Box to JSON-String
     String jsonString = encodeMapToJson(mainBox);
     log("This box will be saved as JSON: $jsonString");
+    notifyListeners();
     await _persistBoxes(jsonString);
   }
 
   @override
-  Future<void> createEvent(Event event) {
-    // TODO: implement createEvent
-    throw UnimplementedError();
+  Future<void> createEvent(Event event) async {
+    currentBox.events[event.name] = event;
+    String jsonString = encodeMapToJson(mainBox);
+    log("This event will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   @override
-  Future<void> createItem(Item item) {
-    // TODO: implement createItem
-    throw UnimplementedError();
-
+  Future<void> createItem(Item item) async {
+    currentBox.items[item.name] = item;
+    String jsonString = encodeMapToJson(mainBox);
+    log("This item will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   @override
-  Future<void> deleteBox(String name) {
-    // TODO: implement deleteBox
-    throw UnimplementedError();
+  Future<void> deleteBox(String name) async {
+    Box? parentBox = mainBox.getParentBoxChildBoxName(currentBox.name);
 
+    if (parentBox != null) {
+      parentBox.boxes.remove(name);
+      String jsonString = encodeMapToJson(mainBox);
+      log("This box will be saved as JSON: $jsonString");
+      notifyListeners();
+      currentBox = parentBox;
+      await _persistBoxes(jsonString);
+    } else {
+      log("Parent box not found for current box: ${currentBox.name}");
+    }
   }
 
   @override
-  Future<void> deleteEvent(String name) {
-    // TODO: implement deleteEvent
-    throw UnimplementedError();
-
+  Future<void> deleteEvent(String name) async {
+    currentBox.events.remove(name);
+    String jsonString = encodeMapToJson(mainBox);
+    log("This event will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   @override
-  Future<void> deleteItem(String name) {
-    // TODO: implement deleteItem
-    throw UnimplementedError();
-
+  Future<void> deleteItem(String name) async {
+    currentBox.items.remove(name);
+    String jsonString = encodeMapToJson(mainBox);
+    log("This item will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   @override
-  Future<Map<String, Box>> readAllBoxes() {
-    // TODO: implement readAllBoxes
-    throw UnimplementedError();
+  Future<Map<String, Box>> readAllBoxes() async {
+    // TODO erstmal mainBox laden später alle aus box methode
+    return mainBox.boxes;
   }
 
   @override
@@ -96,7 +116,10 @@ class SharedPreferencesRepository implements DatabaseRepository {
     try {
       mainBox = Box.fromJson(
         // TODO könnte probleme machen
-        jsonDecode(_prefs.getString("mainBox") ?? encodeMapToJson(Box(name: "mainBox", description: ""))),
+        jsonDecode(
+          _prefs.getString("mainBox") ??
+              encodeMapToJson(Box(name: "mainBox", description: "")),
+        ),
       );
     } catch (e) {
       throw Exception("Error reading boxes: $e");
@@ -105,44 +128,51 @@ class SharedPreferencesRepository implements DatabaseRepository {
   }
 
   @override
-  Future<Map<String, Event>> readAllEvent() {
-    // TODO: implement readAllEvent
-    throw UnimplementedError();
+  Future<Map<String, Event>> readAllEvent() async {
+    // TODO erstmal mainBox ebents laden später alle aus box methode
+    return currentBox.events;
   }
 
   @override
-  Future<Box?> readBox(String name) {
-    // TODO: implement readBox
-    throw UnimplementedError();
+  Future<Box?> readBox(String name) async {
+    return currentBox.boxes[name];
   }
 
   @override
-  Future<Event?> readEvent(String name) {
-    // TODO: implement readEvent
-    throw UnimplementedError();
+  Future<Event?> readEvent(String name) async {
+    return currentBox.events[name];
   }
 
   @override
-  Future<Item?> readItem(String name) {
-    // TODO: implement readItem
-    throw UnimplementedError();
+  Future<Item?> readItem(String name) async {
+    return currentBox.items[name];
   }
 
   @override
-  Future<void> updateBox(Box box) {
-    // TODO: implement updateBox
-    throw UnimplementedError();
+  Future<void> updateBox(Box box) async {
+    currentBox.boxes[box.name] = box;
+    String jsonString = encodeMapToJson(mainBox);
+    log("This box will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   @override
-  Future<void> updateEvent(Event event) {
-    // TODO: implement updateEvent
-    throw UnimplementedError();
+  Future<void> updateEvent(Event event) async {
+    currentBox.events[event.name] = event;
+    String jsonString = encodeMapToJson(mainBox);
+    log("This event will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   @override
   Future<void> updateItem(Item item) async {
-    // TODO: implement updateItem
+    currentBox.items[item.name] = item;
+    String jsonString = encodeMapToJson(mainBox);
+    log("This item will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   // Future<void> _persistTasks() async {
