@@ -1,18 +1,9 @@
 import 'dart:developer';
 
 import 'package:box_this/src/data/model/box.dart';
-import 'package:box_this/src/data/model/event.dart';
-import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/firebase_auth_repository.dart';
 import 'package:box_this/src/data/repositories/firestore_database_repository.dart';
-import 'package:box_this/src/data/repositories/mock_database_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
-import 'package:box_this/src/features/login/screens/firestore_test_screen.dart';
-import 'package:box_this/src/features/login/screens/login_register_test_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/build_widget_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';

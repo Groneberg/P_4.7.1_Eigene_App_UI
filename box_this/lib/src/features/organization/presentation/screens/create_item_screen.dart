@@ -3,7 +3,6 @@ import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/amount_input.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/create_button.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/element_name_input.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_text_input.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
 import 'package:flutter/material.dart';

@@ -2,8 +2,6 @@ import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
-import 'package:box_this/src/data/repositories/database_repository.dart';
-import 'package:box_this/src/data/repositories/mock_database_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/button_create_box.dart';
@@ -86,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               ButtonCreateBox(
                                 onPressed: () {
+                                  databaseRepository.currentBox = databaseRepository.mainBox;
                                   navigatetoCreateBoxScreen(context);
                                 },
                               ),

@@ -4,13 +4,12 @@ import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
-import 'package:box_this/src/data/repositories/mock_database_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
+import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_description.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BoxDetailScreen extends StatelessWidget {
   final Box box;
@@ -19,21 +18,21 @@ class BoxDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SharedPreferencesRepository databaseRepository = Provider.of<SharedPreferencesRepository>(context);
-    
-    
+    SharedPreferencesRepository databaseRepository =
+        Provider.of<SharedPreferencesRepository>(context);
+
     Box? foundBox = databaseRepository.mainBox.findBoxByName(box.name);
     if (foundBox == null) {
       return Scaffold(
-        backgroundColor: Colors.transparent, 
+        backgroundColor: Colors.transparent,
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    
-    databaseRepository.currentBox = databaseRepository.mainBox.findBoxByName(box.name)!;
-    
-    
+    databaseRepository.currentBox = databaseRepository.mainBox.findBoxByName(
+      box.name,
+    )!;
+
     final String title = databaseRepository.currentBox.name;
     final String description = databaseRepository.currentBox.description;
     log("Current Box: ${databaseRepository.currentBox.name}");
@@ -47,12 +46,7 @@ class BoxDetailScreen extends StatelessWidget {
           Expanded(
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElementDescription(
-                  description:
-                      description,
-                ),
-              ],
+              children: [ElementDescription(description: description)],
             ),
           ),
           SizedBox(
@@ -63,26 +57,23 @@ class BoxDetailScreen extends StatelessWidget {
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/box_icon.svg",
                   onPressed: () {
-                    
+                    databaseRepository.currentBox = databaseRepository.mainBox
+                        .findBoxByName(box.name)!;
+                    log("Current Box: ${databaseRepository.currentBox.name}");
+                    navigatetoCreateBoxScreen(context);
                   },
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/item_icon.svg",
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/event2_icon.svg",
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/edit_icon.svg",
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/delete_icon.svg",
@@ -97,6 +88,23 @@ class BoxDetailScreen extends StatelessWidget {
           CustomBottemNavBar(),
         ],
       ),
+    );
+  }
+
+  void navigatetoCreateBoxScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            CreateBoxScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // MaterialPageRoute(
+      //   builder: (context) => CreateBoxScreen(),
+      // ),
     );
   }
 }

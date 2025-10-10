@@ -1,8 +1,6 @@
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
-import 'package:box_this/src/data/repositories/mock_database_repository.dart';
-import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

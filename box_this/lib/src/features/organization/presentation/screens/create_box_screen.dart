@@ -4,13 +4,8 @@ import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
-import 'package:box_this/src/data/repositories/mock_database_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/box_data_input.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/create_button.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/element_name_input.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/element_text_input.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
 
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
@@ -139,7 +134,9 @@ class CreateBoxScreen extends StatelessWidget {
             Consumer<SharedPreferencesRepository>(
               builder: (context, databaseRepository, child) => GestureDetector(
                 onTap: () {
-                  log("mainBox before creating new box: ${databaseRepository.mainBox}");
+                  log(
+                    "mainBox before creating new box: ${databaseRepository.mainBox}",
+                  );
                   databaseRepository.createBox(
                     Box(
                       name: boxNameController.text,
@@ -147,7 +144,12 @@ class CreateBoxScreen extends StatelessWidget {
                     ),
                   );
                   log("Current Boxes: ${databaseRepository.currentBox.boxes}");
-                  navigatetoHomeScreen(context);
+                  if (databaseRepository.currentBox.name !=
+                      databaseRepository.mainBox.name) {
+                    Navigator.pop(context);
+                  } else {
+                    navigatetoHomeScreen(context);
+                  }
                 },
                 child: Container(
                   height: 48,
@@ -162,7 +164,6 @@ class CreateBoxScreen extends StatelessWidget {
                     child: Text(
                       "Creat",
                       style: Theme.of(context).textTheme.labelLarge,
-                      
                     ),
                   ),
                 ),
@@ -178,18 +179,17 @@ class CreateBoxScreen extends StatelessWidget {
   // TODO später Navigation anpassen
   void navigatetoHomeScreen(BuildContext context) {
     Navigator.push(
-    context,
-    PageRouteBuilder(
-      transitionDuration: Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(opacity: animation, child: child);
-      }
-    ),
-    // MaterialPageRoute(
-    //   builder: (context) => HomeScreen(),
-    // ),
-  );
-}
-
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // MaterialPageRoute(
+      //   builder: (context) => HomeScreen(),
+      // ),
+    );
+  }
 }
