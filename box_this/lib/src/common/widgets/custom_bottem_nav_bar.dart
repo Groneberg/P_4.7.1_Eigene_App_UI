@@ -1,3 +1,4 @@
+import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -17,32 +18,33 @@ class CustomBottemNavBar extends StatelessWidget {
           color: Theme.of(context).colorScheme.tertiary,
           width: 1.0, // 1px
         ),
-        gradient:gradients?.beigeGradient,
+        gradient: gradients?.beigeGradient,
       ),
       child: Row(
         spacing: 16,
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // TODO vielleicht eigees svg für menu
-          Icon(
-            Icons.home,
-            color: Theme.of(context).colorScheme.onPrimary,
-            size: 32,
+          GestureDetector(
+            onTap: () {
+              navigatetoHomeScreen(context);
+            },
+            child: Icon(
+              Icons.home,
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: 32,
+            ),
           ),
           Container(
             width: 16,
             height: 64,
-            decoration: BoxDecoration(
-              gradient: gradients?.greenGradient,
-            ),
+            decoration: BoxDecoration(gradient: gradients?.greenGradient),
           ),
           Expanded(child: Container()),
           Container(
             width: 16,
             height: 64,
-            decoration: BoxDecoration(
-              gradient: gradients?.greenGradient
-            ),
+            decoration: BoxDecoration(gradient: gradients?.greenGradient),
           ),
 
           // TODO vielleicht eigees svg für menu
@@ -53,6 +55,22 @@ class CustomBottemNavBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void navigatetoHomeScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // MaterialPageRoute(
+      //   builder: (context) => HomeScreen(),
+      // ),
     );
   }
 }
