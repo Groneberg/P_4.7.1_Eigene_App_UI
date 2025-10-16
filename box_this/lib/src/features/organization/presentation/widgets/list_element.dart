@@ -2,6 +2,8 @@ import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/edit_item_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,7 +17,6 @@ class ListElement extends StatefulWidget {
 }
 
 class _ListElementState extends State<ListElement> {
-
   String getElementTyp() {
     if (widget.element is Box) {
       return "box";
@@ -126,7 +127,7 @@ class _ListElementState extends State<ListElement> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // TODO später Navigation zu Edit Screen
+                        navigateToEditScreen(context);
                       },
                       child: Icon(
                         Icons.edit,
@@ -207,7 +208,39 @@ class _ListElementState extends State<ListElement> {
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) => BoxDetailScreen(box: widget.element),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            BoxDetailScreen(box: widget.element),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // // TODO navigation anpassen für Item und Event
+      // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
+    );
+  }
+
+  void navigateToEditScreen(BuildContext context) {
+    var editScreen;
+    switch (getElementTyp()) {
+      case "box":
+        editScreen = EditBoxScreen(box: widget.element);
+        break;
+      case "item":
+        editScreen = EditItemScreen(item: widget.element,);
+        break;
+      case "event":
+        // editScreen = EditEventScreen(); // TODO noch nicht erstellt
+        break;
+      default:
+        editScreen = null;
+    }
+    
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            editScreen,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

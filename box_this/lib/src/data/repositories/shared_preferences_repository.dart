@@ -76,14 +76,17 @@ class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepo
 
     if (parentBox != null) {
       parentBox.boxes.remove(name);
-      String jsonString = encodeMapToJson(mainBox);
-      log("This box will be saved as JSON: $jsonString");
-      notifyListeners();
       currentBox = parentBox;
-      await _persistBoxes(jsonString);
+    } else if (currentBox.name == mainBox.name) {
+      mainBox.boxes.remove(name);
+      currentBox = mainBox;
     } else {
       log("Parent box not found for current box: ${currentBox.name}");
     }
+      String jsonString = encodeMapToJson(mainBox);
+      log("This box will be saved as JSON: $jsonString");
+      notifyListeners();
+      await _persistBoxes(jsonString);
   }
 
   @override

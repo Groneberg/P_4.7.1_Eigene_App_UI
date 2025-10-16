@@ -20,7 +20,8 @@ class CreateButton extends StatelessWidget {
       child: Center(
         child: Text(
           "Creat",
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.displayLarge,
+          
         ),
       ),
     );

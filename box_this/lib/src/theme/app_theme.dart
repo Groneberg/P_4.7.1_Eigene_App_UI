@@ -49,6 +49,12 @@ class AppTheme {
         fontFamily: 'Roboto',
         fontWeight: FontWeight.w400,
       ),
+      displayLarge: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: Color.fromRGBO(250, 250, 250, 1), // Alabaster
+      ),
     ),
     extensions: <ThemeExtension<dynamic>>[
       const GradientsExtension(

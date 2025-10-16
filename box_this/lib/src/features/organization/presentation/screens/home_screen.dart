@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // final SharedPreferencesRepository repository = SharedPreferencesRepository.instance;
-    // final SharedPreferencesRepository repository = SharedPreferencesRepository.instance;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

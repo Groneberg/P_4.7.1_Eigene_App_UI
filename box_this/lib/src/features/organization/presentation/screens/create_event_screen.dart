@@ -14,15 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CreateBoxScreen extends StatelessWidget {
+class CreateEventScreen extends StatelessWidget {
   // final MockDatabaseRepository repository = MockDatabaseRepository();
   // final SharedPreferencesRepository repository =
   //     SharedPreferencesRepository.instance;
-  final TextEditingController boxNameController = TextEditingController();
-  final TextEditingController boxDescriptionController =
+  final TextEditingController eventNameController = TextEditingController();
+  final TextEditingController eventDescriptionController =
       TextEditingController();
 
-  CreateBoxScreen({super.key});
+  CreateEventScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,9 @@ class CreateBoxScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TiTleAppBar(
-        title: "Create Box",
+        title: "Create Event",
         setBackIcon: false,
-        icon: "box_icon",
+        icon: "event_icon",
       ),
       body: Center(
         child: Column(
@@ -44,10 +44,11 @@ class CreateBoxScreen extends StatelessWidget {
             // ), // Expanded
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.all(24.0),
+                // padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   spacing: 24,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // ElementNameInput(icon: "box_icon", hintText: "Boxname...", boxTextEditingController: boxTextEditingController,),
                     Row(
@@ -55,11 +56,8 @@ class CreateBoxScreen extends StatelessWidget {
                         SizedBox(
                           width: 48,
                           // padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/icons/box_icon.svg",
+                          child: SvgPicture.asset(
+                                "assets/svg/icons/event_icon.svg",
                                 height: 34,
                                 width: 30,
                                 colorFilter: ColorFilter.mode(
@@ -67,8 +65,6 @@ class CreateBoxScreen extends StatelessWidget {
                                   BlendMode.srcIn,
                                 ),
                               ),
-                            ],
-                          ),
                         ),
                         Expanded(
                           child: Container(
@@ -79,11 +75,11 @@ class CreateBoxScreen extends StatelessWidget {
                               ),
                             ),
                             child: TextFormField(
-                              controller: boxNameController,
+                              controller: eventNameController,
                               textAlign: TextAlign.right,
                               style: Theme.of(context).textTheme.bodyLarge,
                               decoration: InputDecoration(
-                                hintText: "Boxname...",
+                                hintText: "Eventname...",
                                 border: InputBorder.none,
                               ),
                             ),
@@ -91,10 +87,10 @@ class CreateBoxScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // ElementTextInput(
-                    //   labelName: "Description",
-                    //   hintText: "Description...",
-                    // ),
+                    // --------------------
+
+
+                    // --------------------
                     Column(
                       children: [
                         LabelName(labelName: "Description", labelWidth: 200),
@@ -111,7 +107,7 @@ class CreateBoxScreen extends StatelessWidget {
                               horizontal: 8,
                             ),
                             child: TextFormField(
-                              controller: boxDescriptionController,
+                              controller: eventDescriptionController,
                               maxLines: null,
                               minLines: 3,
                               keyboardType: TextInputType.multiline,
@@ -169,8 +165,8 @@ class CreateBoxScreen extends StatelessWidget {
     log("mainBox before creating new box: ${databaseRepository.mainBox}");
     databaseRepository.createBox(
       Box(
-        name: boxNameController.text,
-        description: boxDescriptionController.text,
+        name: eventNameController.text,
+        description: eventDescriptionController.text,
       ),
     );
     log("Current Boxes: ${databaseRepository.currentBox.boxes}");

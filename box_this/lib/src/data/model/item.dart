@@ -7,6 +7,7 @@ class Item {
 
   String name;
   String description;
+  String? location;
   int amount = 0;
   int minAmount = 0;
   Map<String, Event> events = {};
@@ -16,6 +17,7 @@ class Item {
     parentId = "",
     required this.name,
     required this.description,
+    this.location,
     this.amount = 0,
     this.minAmount = 0,
   });
@@ -33,6 +35,7 @@ class Item {
       parentId: json['parentId'] as String?,
       name: json['name'] as String,
       description: json['description'] as String,
+      location: json['location'] as String?,
       amount: json['amount'] as int,
       minAmount: json['minAmount'] as int,
     )..events = reconstructedEvents; // Fügt die rekonstruierten Events hinzu
@@ -41,16 +44,31 @@ class Item {
   /// Adds an event to the current box.
   /// This allows for associating events with this specific box.
   void addEvent(Event event) {
-    this.events[name] = event;
+    this.events[event.name] = event;
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> jsonString = {
       'name': name,
       'description': description,
-      'amount': amount,
-      'minAmount': minAmount,
     };
+
+    if (id != null && id!.isNotEmpty) {
+      jsonString['id'] = id;
+    }
+    if (parentId != null && parentId!.isNotEmpty) {
+      jsonString['parentId'] = parentId;
+    }
+    if (location != null && location!.isNotEmpty) {
+      jsonString['location'] = location;
+    }
+    if (amount != 0) {
+      jsonString['amount'] = amount;
+    }
+
+    if (minAmount != 0) {
+      jsonString['minAmount'] = minAmount;
+    }
 
     if (events.isNotEmpty) {
       jsonString['events'] = events.map(
@@ -64,8 +82,15 @@ class Item {
   // TODO bessere umsetzung der Informationen
   @override
   String toString() {
-    return 'Name: ${this.name}\n'
-        'Description: ${this.description}\n'
-        'Amount: ${this.amount}\n';
+    return 'Item('
+        'id: $id, '
+        'parentId: $parentId, '
+        'name: $name, '
+        'description: $description, '
+        'location: $location, '
+        'amount: $amount, '
+        'minAmount: $minAmount, '
+        'events: ${events.keys.toList()}'
+        ')';
   }
 }

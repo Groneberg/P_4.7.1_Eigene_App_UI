@@ -4,6 +4,8 @@ import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/firebase_auth_repository.dart';
 import 'package:box_this/src/data/repositories/firestore_database_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
+import 'package:box_this/src/features/organization/presentation/screens/build_widget_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/create_event_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -130,11 +132,12 @@ class MainApp extends StatelessWidget {
           statusBarColor: Colors.transparent,
         ),
         child: SafeArea(
-          child: HomeScreen(),
+          // child: HomeScreen(),
           // child: CreateBoxScreen(),
           // child: BoxDetailScreen(box: MockDatabaseRepository.instance.mainBox.boxes[0]!),
           // child: CreateItemScreen(),
           // child: BuildWidgetScreen(),
+          child: CreateEventScreen(),
           // child: AuthScreen(),
           // child: FirestoreTestScreen(),
         ),

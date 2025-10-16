@@ -6,6 +6,9 @@ import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/accordion_list.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_description.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +49,12 @@ class BoxDetailScreen extends StatelessWidget {
           Expanded(
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.end,
-              children: [ElementDescription(description: description)],
+              children: [
+                ElementDescription(description: description),
+                AccordionList(typ: "Box", box: box),
+                AccordionList(typ: "Item", box: box),
+                AccordionList(typ: "Event", box: box),
+              ],
             ),
           ),
           SizedBox(
@@ -65,7 +73,10 @@ class BoxDetailScreen extends StatelessWidget {
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/item_icon.svg",
-                  onPressed: () {},
+                  onPressed: () {
+                    
+                    navigatetoCreateItemScreen(context);
+                  },
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/event2_icon.svg",
@@ -73,7 +84,9 @@ class BoxDetailScreen extends StatelessWidget {
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/edit_icon.svg",
-                  onPressed: () {},
+                  onPressed: () {
+                    navigateToEditBoxScreen(box, context);
+                  },
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/delete_icon.svg",
@@ -105,6 +118,38 @@ class BoxDetailScreen extends StatelessWidget {
       // MaterialPageRoute(
       //   builder: (context) => CreateBoxScreen(),
       // ),
+    );
+  }
+
+  void navigatetoCreateItemScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) => CreateItemScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // MaterialPageRoute(
+      //   builder: (context) => HomeScreen(),
+      // ),
+    );
+  }
+
+  void navigateToEditBoxScreen(Box box, BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            EditBoxScreen(box: box),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // // TODO navigation anpassen für Item und Event
+      // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
     );
   }
 }

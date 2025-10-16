@@ -14,24 +14,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CreateBoxScreen extends StatelessWidget {
-  // final MockDatabaseRepository repository = MockDatabaseRepository();
-  // final SharedPreferencesRepository repository =
-  //     SharedPreferencesRepository.instance;
+class EditBoxScreen extends StatelessWidget {
+  final Box? box;
+
   final TextEditingController boxNameController = TextEditingController();
   final TextEditingController boxDescriptionController =
       TextEditingController();
 
-  CreateBoxScreen({super.key});
+  EditBoxScreen({super.key, this.box}) {
+    if (box != null) {
+      boxNameController.text = box!.name;
+      boxDescriptionController.text = box!.description;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
 
+    boxNameController.text = box!.name;
+    boxDescriptionController.text = box!.description;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TiTleAppBar(
-        title: "Create Box",
+        title: "Edit Box",
         setBackIcon: false,
         icon: "box_icon",
       ),
@@ -134,7 +141,7 @@ class CreateBoxScreen extends StatelessWidget {
             Consumer<SharedPreferencesRepository>(
               builder: (context, databaseRepository, child) => GestureDetector(
                 onTap: () {
-                  createBox(context);
+                  editBox(context);
                 },
                 child: Container(
                   height: 48,
@@ -147,7 +154,7 @@ class CreateBoxScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      "Creat",
+                      "Edit",
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ),
@@ -161,13 +168,13 @@ class CreateBoxScreen extends StatelessWidget {
     );
   }
 
-  void createBox(BuildContext context) {
+  void editBox(BuildContext context) {
     final databaseRepository = Provider.of<SharedPreferencesRepository>(
       context,
       listen: false,
     );
     log("mainBox before creating new box: ${databaseRepository.mainBox}");
-    databaseRepository.createBox(
+    databaseRepository.updateBox(
       Box(
         name: boxNameController.text,
         description: boxDescriptionController.text,

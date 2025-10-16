@@ -15,14 +15,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CreateItemScreen extends StatefulWidget {
-  const CreateItemScreen({super.key});
+class EditItemScreen extends StatefulWidget {
+  final Item? item;
+  const EditItemScreen({super.key, this.item});
 
   @override
-  State<CreateItemScreen> createState() => _CreateItemScreenState();
+  State<EditItemScreen> createState() => _EditItemScreenState();
 }
 
-class _CreateItemScreenState extends State<CreateItemScreen> {
+class _EditItemScreenState extends State<EditItemScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _itemNameController = TextEditingController();
@@ -30,6 +31,19 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _minAmountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final item = widget.item;
+    if (item != null) {
+      _itemNameController.text = item.name;
+      _descriptionController.text = item.description;
+      _locationController.text = item.location ?? "";
+      _amountController.text = item.amount.toString();
+      _minAmountController.text = item.minAmount.toString();
+    }
+  }
 
   @override
   void dispose() {
@@ -40,7 +54,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
     super.dispose();
   }
 
-  void createItem(BuildContext context) {
+  void updateItem(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       final databaseRepository = Provider.of<SharedPreferencesRepository>(
         context,
@@ -48,7 +62,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
       );
 
       log("Creating Item: ${_itemNameController.text}");
-      databaseRepository.createItem(
+      databaseRepository.updateItem(
         Item(
           name: _itemNameController.text,
           description: _descriptionController.text,
@@ -75,7 +89,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TiTleAppBar(
-        title: "Create Item",
+        title: "Edit Item",
         setBackIcon: false,
         icon: "item_icon",
       ),
@@ -343,7 +357,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
           Consumer<SharedPreferencesRepository>(
             builder: (context, databaseRepository, child) => GestureDetector(
               onTap: () {
-                createItem(context);
+                updateItem(context);
               },
               child: Container(
                 height: 48,
@@ -356,7 +370,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    "Creat",
+                    "Edit",
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),

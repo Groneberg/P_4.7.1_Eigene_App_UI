@@ -1,6 +1,11 @@
+import 'dart:ffi';
+
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_description.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/themed_time_picker.dart';
+import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BuildWidgetScreen extends StatefulWidget {
   const BuildWidgetScreen({super.key});
@@ -12,13 +17,12 @@ class BuildWidgetScreen extends StatefulWidget {
 class _BuildWidgetScreenState extends State<BuildWidgetScreen> {
   @override
   Widget build(BuildContext context) {
+    final gradients = Theme.of(context).extension<GradientsExtension>();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
-      body: ElementDescription(
-        description:
-            "Dies ist eine Beschreibung eines Elements. Hier können Details angezeigt werden.",
-      ),  
+      body: ThemedTimePicker(gradients: gradients),
     );
   }
 }

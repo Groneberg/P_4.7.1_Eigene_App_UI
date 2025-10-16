@@ -53,7 +53,7 @@ class Box {
   /// Adds an item to the current box.
   /// This allows for associating items with this specific box.
   void addItem(Item item) {
-    this.items[name] = item;
+    this.items[item.name] = item;
   }
 
   /// Recursively searches for a box by its name within the current box and its sub-boxes.
