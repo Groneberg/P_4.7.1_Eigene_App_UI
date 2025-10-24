@@ -1,16 +1,13 @@
+import 'dart:developer';
+
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ThemedTimePicker extends StatefulWidget {
-  final GradientsExtension? gradients;
-  final Function(int hour, int minute)? onTimeSelected;
+  final Function(String timeString)? onTimeSelected;
 
-  const ThemedTimePicker({
-    super.key,
-    required this.gradients,
-    this.onTimeSelected,
-  });
+  const ThemedTimePicker({super.key, this.onTimeSelected});
 
   @override
   State<ThemedTimePicker> createState() => _ThemedTimePickerState();
@@ -23,12 +20,14 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final gradients = Theme.of(context).extension<GradientsExtension>();
+
     return Center(
       child: Container(
         width: 280,
         height: 240,
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        decoration: BoxDecoration(gradient: widget.gradients?.beigeGradient),
+        decoration: BoxDecoration(gradient: gradients?.beigeGradient),
         child: Form(
           key: _formKey,
           child: Column(
@@ -39,7 +38,7 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
                     width: 8,
                     height: 20,
                     decoration: BoxDecoration(
-                      gradient: widget.gradients?.greenGradient,
+                      gradient: gradients?.greenGradient,
                     ),
                   ),
                   SizedBox(width: 12),
@@ -154,8 +153,9 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
                   GestureDetector(
                     onTap: () {
                       // TODO Handle Cancel action
-                      _hourController.clear();
-                      _minuteController.clear();
+                      // _hourController.clear();
+                      // _minuteController.clear();
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "Cancel",
@@ -169,12 +169,25 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      final int? hour = int.tryParse(_hourController.text) ?? 0;
-                      final int? minute =
-                          int.tryParse(_minuteController.text) ?? 0;
+                      final int? hour = int.tryParse(_hourController.text);
+                      final int? minute = int.tryParse(_minuteController.text);
 
-                      if (hour != null && minute != null) {
-                        widget.onTimeSelected?.call(hour, minute);
+                      if (hour != null &&
+                          minute != null &&
+                          hour >= 0 &&
+                          hour <= 23 &&
+                          minute >= 0 &&
+                          minute <= 59) {
+                        final String timeString =
+                            '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+
+                        widget.onTimeSelected?.call(timeString);
+
+                        Navigator.pop(context);
+                      } else {
+                        log(
+                          "invalide Time entered: hour=$hour, minute=$minute",
+                        );
                       }
                     },
                     child: Text(

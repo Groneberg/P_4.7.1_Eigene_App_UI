@@ -38,74 +38,79 @@ class _HomeScreenState extends State<HomeScreen> {
     // final SharedPreferencesRepository repository = SharedPreferencesRepository.instance;
 
     return Scaffold(
+      
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
-      body: Column(
-        children: [
-          CustomSearchBar(),
-          // TODO später dynamisch und aus liste / akkordion
-          Consumer<SharedPreferencesRepository>(
-            builder: (context, databaseRepository, child) => Expanded(
-              child: FutureBuilder(
-                // future: databaseRepository.readMainBoxStructure(),
-                future: _futureBoxes,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        strokeWidth: 8,
-                      ),
-                    );
-                  } else if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData) {
-                    return Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: databaseRepository.mainBox.boxes.length,
-                          itemBuilder: (context, index) {
-                            String key = databaseRepository.mainBox.boxes.keys
-                                .elementAt(index);
-                            return ListElement(
-                              element: databaseRepository.mainBox.boxes[key]!,
-                              onDelete: () {
-                                databaseRepository.deleteBox(key);
-                                _loadBoxes();
-                              },
-                            );
-                          },
+      body: SafeArea(
+         top: true,
+        bottom: true,
+        child: Column(
+          children: [
+            CustomSearchBar(),
+            // TODO später dynamisch und aus liste / akkordion
+            Consumer<SharedPreferencesRepository>(
+              builder: (context, databaseRepository, child) => Expanded(
+                child: FutureBuilder(
+                  // future: databaseRepository.readMainBoxStructure(),
+                  future: _futureBoxes,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          strokeWidth: 8,
                         ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ButtonCreateBox(
-                                onPressed: () {
-                                  databaseRepository.currentBox = databaseRepository.mainBox;
-                                  navigatetoCreateBoxScreen(context);
+                      );
+                    } else if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      return Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: databaseRepository.mainBox.boxes.length,
+                            itemBuilder: (context, index) {
+                              String key = databaseRepository.mainBox.boxes.keys
+                                  .elementAt(index);
+                              return ListElement(
+                                element: databaseRepository.mainBox.boxes[key]!,
+                                onDelete: () {
+                                  databaseRepository.deleteBox(key);
+                                  _loadBoxes();
                                 },
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
-                  } else {
-                    return const Text("No data available");
-                  }
-                },
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ButtonCreateBox(
+                                  onPressed: () {
+                                    databaseRepository.currentBox = databaseRepository.mainBox;
+                                    navigatetoCreateBoxScreen(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      return const Text("No data available");
+                    }
+                  },
+                ),
               ),
             ),
-          ),
-
-          SizedBox(height: 90),
-          CustomBottemNavBar(),
-          // SizedBox(height: MediaQuery.of(context).padding.bottom),
-        ],
+        
+            SizedBox(height: 90),
+            CustomBottemNavBar(),
+            // SizedBox(height: MediaQuery.of(context).padding.bottom),
+          ],
+        ),
       ),
     );
   }

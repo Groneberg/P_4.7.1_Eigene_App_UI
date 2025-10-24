@@ -6,6 +6,7 @@ import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/create_event_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/accordion_list.dart';
@@ -80,7 +81,9 @@ class BoxDetailScreen extends StatelessWidget {
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/event2_icon.svg",
-                  onPressed: () {},
+                  onPressed: () {
+                    navigatetoCreateEventScreen(context);
+                  },
                 ),
                 SmallActionButton(
                   svgIconPath: "assets/svg/icons/edit_icon.svg",
@@ -150,6 +153,20 @@ class BoxDetailScreen extends StatelessWidget {
       ),
       // // TODO navigation anpassen für Item und Event
       // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
+    );
+  }
+
+  void navigatetoCreateEventScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            CreateEventScreen(),
+      ),
+      // MaterialPageRoute(
+      //   builder: (context) => CreateEventScreen(),
+      // ),
     );
   }
 }

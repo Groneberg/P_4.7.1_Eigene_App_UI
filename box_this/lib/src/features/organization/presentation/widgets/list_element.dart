@@ -3,6 +3,7 @@ import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/edit_event_screen%20copy.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_item_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -229,7 +230,7 @@ class _ListElementState extends State<ListElement> {
         editScreen = EditItemScreen(item: widget.element,);
         break;
       case "event":
-        // editScreen = EditEventScreen(); // TODO noch nicht erstellt
+        editScreen = EditEventScreen();
         break;
       default:
         editScreen = null;
@@ -245,7 +246,6 @@ class _ListElementState extends State<ListElement> {
           return FadeTransition(opacity: animation, child: child);
         },
       ),
-      // // TODO navigation anpassen für Item und Event
       // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
     );
   }

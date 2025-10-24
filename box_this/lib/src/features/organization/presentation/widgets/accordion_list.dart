@@ -48,7 +48,8 @@ class _AccordionListState extends State<AccordionList> {
       default:
         break;
     }
-    databaseRepository.updateBox(Box(name: databaseRepository.currentBox.name, description: databaseRepository.currentBox.description, ), );
+    databaseRepository.deleteEvent(name);
+    // databaseRepository.updateBox(Box(name: databaseRepository.currentBox.name, description: databaseRepository.currentBox.description, ), );
   }
 
   @override

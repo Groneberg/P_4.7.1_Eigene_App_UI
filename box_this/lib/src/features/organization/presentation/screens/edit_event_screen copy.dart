@@ -18,14 +18,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CreateEventScreen extends StatefulWidget {
-  CreateEventScreen({super.key});
+class EditEventScreen extends StatefulWidget {
+  final Event? event;
+
+  EditEventScreen({super.key, this.event});
+
 
   @override
-  State<CreateEventScreen> createState() => _CreateEventScreenState();
+  State<EditEventScreen> createState() => _CreateEventScreenState();
 }
 
-class _CreateEventScreenState extends State<CreateEventScreen> {
+class _CreateEventScreenState extends State<EditEventScreen> {
   // final MockDatabaseRepository repository = MockDatabaseRepository();
   final _formKey = GlobalKey<FormState>();
 
@@ -37,6 +40,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   final TextEditingController _descriptionController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    final event = widget.event;
+    if (event != null) {
+      _nameController.text = event.name;
+      _dateController.text = event.date;
+      _itemNameController.text = event.time;
+      _descriptionController.text = event.description;
+    }
+  }
   // bool _showDatePicker = false;
 
   // bool _showTimePicker = false;
@@ -260,7 +274,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             Consumer<SharedPreferencesRepository>(
               builder: (context, databaseRepository, child) => GestureDetector(
                 onTap: () {
-                  createEvent(context);
+                  updateEvent(context);
                 },
                 child: Container(
                   height: 48,
@@ -273,7 +287,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   ),
                   child: Center(
                     child: Text(
-                      "Creat",
+                      "Edit",
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ),
@@ -287,7 +301,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  void createEvent(BuildContext context) {
+  void updateEvent(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       final databaseRepository = Provider.of<SharedPreferencesRepository>(
         context,
@@ -295,7 +309,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       );
 
       log("Creating Item: ${_nameController.text}");
-      databaseRepository.createEvent(
+      databaseRepository.updateEvent(
         Event(
           name: _nameController.text,
           date: _dateController.text,

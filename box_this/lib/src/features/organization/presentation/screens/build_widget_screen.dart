@@ -17,12 +17,39 @@ class BuildWidgetScreen extends StatefulWidget {
 class _BuildWidgetScreenState extends State<BuildWidgetScreen> {
   @override
   Widget build(BuildContext context) {
-    final gradients = Theme.of(context).extension<GradientsExtension>();
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
-      body: ThemedTimePicker(gradients: gradients),
+      body: Column(
+        children: [
+          // ThemedTimePicker()
+          ThemedDatePicker(),
+        ],
+      ),
+    );
+  }
+}
+
+class ThemedDatePicker extends StatelessWidget {
+  const ThemedDatePicker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1990),
+          lastDate: DateTime(2100),
+        );
+        if (picked != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Selected date: ${picked.toLocal()}')),
+          );
+        }
+      },
+      child: const Text('Pick a date'),
     );
   }
 }

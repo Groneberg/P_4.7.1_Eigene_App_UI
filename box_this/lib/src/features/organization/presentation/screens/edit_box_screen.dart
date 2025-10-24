@@ -14,26 +14,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class EditBoxScreen extends StatelessWidget {
+class EditBoxScreen extends StatefulWidget {
   final Box? box;
 
-  final TextEditingController boxNameController = TextEditingController();
-  final TextEditingController boxDescriptionController =
+
+  EditBoxScreen({super.key, this.box});
+
+  @override
+  State<EditBoxScreen> createState() => _EditBoxScreenState();
+}
+
+class _EditBoxScreenState extends State<EditBoxScreen> {
+  final TextEditingController _nameController = TextEditingController();
+
+  final TextEditingController _descriptionController =
       TextEditingController();
 
-  EditBoxScreen({super.key, this.box}) {
+  @override
+  void initState() {
+    super.initState();
+    final box = widget.box;
     if (box != null) {
-      boxNameController.text = box!.name;
-      boxDescriptionController.text = box!.description;
+      _nameController.text = box.name;
+      _descriptionController.text = box.description;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
-
-    boxNameController.text = box!.name;
-    boxDescriptionController.text = box!.description;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -86,7 +95,7 @@ class EditBoxScreen extends StatelessWidget {
                               ),
                             ),
                             child: TextFormField(
-                              controller: boxNameController,
+                              controller: _nameController,
                               textAlign: TextAlign.right,
                               style: Theme.of(context).textTheme.bodyLarge,
                               decoration: InputDecoration(
@@ -118,7 +127,7 @@ class EditBoxScreen extends StatelessWidget {
                               horizontal: 8,
                             ),
                             child: TextFormField(
-                              controller: boxDescriptionController,
+                              controller: _descriptionController,
                               maxLines: null,
                               minLines: 3,
                               keyboardType: TextInputType.multiline,
@@ -176,8 +185,8 @@ class EditBoxScreen extends StatelessWidget {
     log("mainBox before creating new box: ${databaseRepository.mainBox}");
     databaseRepository.updateBox(
       Box(
-        name: boxNameController.text,
-        description: boxDescriptionController.text,
+        name: _nameController.text,
+        description: _descriptionController.text,
       ),
     );
     log("Current Boxes: ${databaseRepository.currentBox.boxes}");
