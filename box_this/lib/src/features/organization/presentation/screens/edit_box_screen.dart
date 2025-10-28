@@ -17,7 +17,6 @@ import 'package:provider/provider.dart';
 class EditBoxScreen extends StatefulWidget {
   final Box? box;
 
-
   EditBoxScreen({super.key, this.box});
 
   @override
@@ -27,8 +26,7 @@ class EditBoxScreen extends StatefulWidget {
 class _EditBoxScreenState extends State<EditBoxScreen> {
   final TextEditingController _nameController = TextEditingController();
 
-  final TextEditingController _descriptionController =
-      TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -44,134 +42,139 @@ class _EditBoxScreenState extends State<EditBoxScreen> {
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: TiTleAppBar(
-        title: "Edit Box",
-        setBackIcon: false,
-        icon: "box_icon",
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            CustomSearchBar(),
-            // BoxDataInput(
-            //   boxTextEditingController: boxTextEditingController,
-            // ), // Expanded
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  spacing: 24,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // ElementNameInput(icon: "box_icon", hintText: "Boxname...", boxTextEditingController: boxTextEditingController,),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 48,
-                          // padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/icons/box_icon.svg",
-                                height: 34,
-                                width: 30,
-                                colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.onPrimary,
-                                  BlendMode.srcIn,
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: TiTleAppBar(
+          title: "Edit Box",
+          setBackIcon: false,
+          icon: "box_icon",
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              CustomSearchBar(),
+              // BoxDataInput(
+              //   boxTextEditingController: boxTextEditingController,
+              // ), // Expanded
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    spacing: 24,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // ElementNameInput(icon: "box_icon", hintText: "Boxname...", boxTextEditingController: boxTextEditingController,),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 48,
+                            // padding: const EdgeInsets.symmetric(horizontal: 22),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/svg/icons/box_icon.svg",
+                                  height: 34,
+                                  width: 30,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.tertiary,
                                 ),
                               ),
-                            ],
+                              child: TextFormField(
+                                controller: _nameController,
+                                textAlign: TextAlign.right,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                decoration: InputDecoration(
+                                  hintText: "Boxname...",
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.only(right: 8),
+                        ],
+                      ),
+                      // ElementTextInput(
+                      //   labelName: "Description",
+                      //   hintText: "Description...",
+                      // ),
+                      Column(
+                        children: [
+                          LabelName(labelName: "Description", labelWidth: 200),
+                          SizedBox(height: 8),
+                          DecoratedBox(
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Theme.of(context).colorScheme.tertiary,
                               ),
                             ),
-                            child: TextFormField(
-                              controller: _nameController,
-                              textAlign: TextAlign.right,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              decoration: InputDecoration(
-                                hintText: "Boxname...",
-                                border: InputBorder.none,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                                horizontal: 8,
+                              ),
+                              child: TextFormField(
+                                controller: _descriptionController,
+                                maxLines: null,
+                                minLines: 3,
+                                keyboardType: TextInputType.multiline,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                decoration: InputDecoration(
+                                  hintText: "Description...",
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    // ElementTextInput(
-                    //   labelName: "Description",
-                    //   hintText: "Description...",
-                    // ),
-                    Column(
-                      children: [
-                        LabelName(labelName: "Description", labelWidth: 200),
-                        SizedBox(height: 8),
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 4.0,
-                              horizontal: 8,
-                            ),
-                            child: TextFormField(
-                              controller: _descriptionController,
-                              maxLines: null,
-                              minLines: 3,
-                              keyboardType: TextInputType.multiline,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              decoration: InputDecoration(
-                                hintText: "Description...",
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // TODO neu bauen mit button widget ?
-            // CreateButton(),
-            Consumer<SharedPreferencesRepository>(
-              builder: (context, databaseRepository, child) => GestureDetector(
-                onTap: () {
-                  editBox(context);
-                },
-                child: Container(
-                  height: 48,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    gradient: gradients?.greenGradient,
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Edit",
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            CustomBottemNavBar(),
-          ],
+              // TODO neu bauen mit button widget ?
+              // CreateButton(),
+              Consumer<SharedPreferencesRepository>(
+                builder: (context, databaseRepository, child) =>
+                    GestureDetector(
+                      onTap: () {
+                        editBox(context);
+                      },
+                      child: Container(
+                        height: 48,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          gradient: gradients?.greenGradient,
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Edit",
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                      ),
+                    ),
+              ),
+              CustomBottemNavBar(),
+            ],
+          ),
         ),
       ),
     );
@@ -184,10 +187,7 @@ class _EditBoxScreenState extends State<EditBoxScreen> {
     );
     log("mainBox before creating new box: ${databaseRepository.mainBox}");
     databaseRepository.updateBox(
-      Box(
-        name: _nameController.text,
-        description: _descriptionController.text,
-      ),
+      Box(name: _nameController.text, description: _descriptionController.text),
     );
     log("Current Boxes: ${databaseRepository.currentBox.boxes}");
     if (databaseRepository.currentBox.name != databaseRepository.mainBox.name) {

@@ -115,7 +115,7 @@ class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepo
 
   @override
   Future<Box> readMainBoxStructure() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1)); // Simulate some delay
     try {
       mainBox = Box.fromJson(
         // TODO könnte probleme machen

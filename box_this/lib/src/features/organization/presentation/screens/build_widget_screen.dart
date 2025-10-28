@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/element_description.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/element_information.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/themed_time_picker.dart';
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +17,18 @@ class BuildWidgetScreen extends StatefulWidget {
 class _BuildWidgetScreenState extends State<BuildWidgetScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
-      body: Column(
-        children: [
-          // ThemedTimePicker()
-          ThemedDatePicker(),
-        ],
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
+        body: Column(
+          children: [
+            // ThemedTimePicker()
+            ThemedDatePicker(),
+          ],
+        ),
       ),
     );
   }

@@ -72,139 +72,76 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: TiTleAppBar(
-        title: "Create Item",
-        setBackIcon: false,
-        icon: "item_icon",
-      ),
-      body: Column(
-        children: [
-          CustomSearchBar(),
-
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 24, right: 24, left: 24.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  spacing: 24,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 48,
-                          // padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/icons/item_icon.svg",
-                                height: 34,
-                                width: 30,
-                                colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.onPrimary,
-                                  BlendMode.srcIn,
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: TiTleAppBar(
+          title: "Create Item",
+          setBackIcon: false,
+          icon: "item_icon",
+        ),
+        body: Column(
+          children: [
+            CustomSearchBar(),
+      
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 24, right: 24, left: 24.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    spacing: 24,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 48,
+                            // padding: const EdgeInsets.symmetric(horizontal: 22),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/svg/icons/item_icon.svg",
+                                  height: 34,
+                                  width: 30,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.tertiary,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.tertiary,
-                              ),
-                            ),
-                            child: TextFormField(
-                              controller: _itemNameController,
-                              textAlign: TextAlign.right,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              decoration: InputDecoration(
-                                hintText: "Itemname...",
-                                border: InputBorder.none,
+                              child: TextFormField(
+                                controller: _itemNameController,
+                                textAlign: TextAlign.right,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                decoration: InputDecoration(
+                                  hintText: "Itemname...",
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    // ElementNameInput(icon: "item_icon", hintText: "Itemname...",),
-                    // ElementTextInput(labelName: "Description",hintText: "Description...",),
-                    Column(
-                      children: [
-                        LabelName(labelName: "Description", labelWidth: 200),
-                        SizedBox(height: 8),
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 4.0,
-                              horizontal: 8,
-                            ),
-                            child: TextFormField(
-                              controller: _descriptionController,
-                              maxLines: null,
-                              minLines: 3,
-                              keyboardType: TextInputType.multiline,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              decoration: InputDecoration(
-                                hintText: "Description...",
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // ElementTextInput(
-                    //   labelName: "Location",
-                    //   hintText: "Location...",
-                    // ),
-                    Column(
-                      children: [
-                        LabelName(labelName: "Location", labelWidth: 200),
-                        SizedBox(height: 8),
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 4.0,
-                              horizontal: 8,
-                            ),
-                            child: TextFormField(
-                              controller: _locationController,
-                              maxLines: null,
-                              minLines: 3,
-                              keyboardType: TextInputType.multiline,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              decoration: InputDecoration(
-                                hintText: "Location...",
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        LabelName(labelName: "Amount", labelWidth: 80),
-                        Expanded(
-                          child: Container(
+                        ],
+                      ),
+                      // ElementNameInput(icon: "item_icon", hintText: "Itemname...",),
+                      // ElementTextInput(labelName: "Description",hintText: "Description...",),
+                      Column(
+                        children: [
+                          LabelName(labelName: "Description", labelWidth: 200),
+                          SizedBox(height: 8),
+                          DecoratedBox(
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Theme.of(context).colorScheme.tertiary,
@@ -212,159 +149,226 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
+                                vertical: 4.0,
+                                horizontal: 8,
                               ),
                               child: TextFormField(
-                                controller: _amountController,
-                                textAlign: TextAlign.right,
+                                controller: _descriptionController,
+                                maxLines: null,
+                                minLines: 3,
+                                keyboardType: TextInputType.multiline,
                                 style: Theme.of(context).textTheme.bodyLarge,
                                 decoration: InputDecoration(
-                                  hintText: "0",
+                                  hintText: "Description...",
                                   border: InputBorder.none,
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        IconButton(
-                          padding: EdgeInsets.all(0),
-                          onPressed: () {
-                            setState(() {
-                              int currentAmount = int.tryParse(_amountController.text) ?? 0;
-                              currentAmount++;
-                              _amountController.text = currentAmount.toString();
-                            });
-                          },
-                          icon: Icon(
-                            Icons.add,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 40,
+                        ],
+                      ),
+                      // ElementTextInput(
+                      //   labelName: "Location",
+                      //   hintText: "Location...",
+                      // ),
+                      Column(
+                        children: [
+                          LabelName(labelName: "Location", labelWidth: 200),
+                          SizedBox(height: 8),
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                                horizontal: 8,
+                              ),
+                              child: TextFormField(
+                                controller: _locationController,
+                                maxLines: null,
+                                minLines: 3,
+                                keyboardType: TextInputType.multiline,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                decoration: InputDecoration(
+                                  hintText: "Location...",
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        IconButton(
-                          padding: EdgeInsets.all(0),
-                          onPressed: () {
-                            setState(() {
-                              int currentAmount = int.tryParse(_amountController.text) ?? 0;
-                              if (currentAmount > 0) {
-                                currentAmount--;
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LabelName(labelName: "Amount", labelWidth: 80),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                ),
+                                child: TextFormField(
+                                  controller: _amountController,
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  decoration: InputDecoration(
+                                    hintText: "0",
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {
+                              setState(() {
+                                int currentAmount = int.tryParse(_amountController.text) ?? 0;
+                                currentAmount++;
                                 _amountController.text = currentAmount.toString();
-                              }
-                            });
-                          },
-                          icon: Icon(
-                            Icons.remove,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 40,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        LabelName(labelName: "MinAmount", labelWidth: 80),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.tertiary,
-                              ),
+                              });
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 40,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
+                          ),
+                          SizedBox(width: 8),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {
+                              setState(() {
+                                int currentAmount = int.tryParse(_amountController.text) ?? 0;
+                                if (currentAmount > 0) {
+                                  currentAmount--;
+                                  _amountController.text = currentAmount.toString();
+                                }
+                              });
+                            },
+                            icon: Icon(
+                              Icons.remove,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 40,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LabelName(labelName: "MinAmount", labelWidth: 80),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                ),
                               ),
-                              child: TextFormField(
-                                controller: _minAmountController,
-                                textAlign: TextAlign.right,
-                                style: Theme.of(context).textTheme.bodyLarge,
-                                decoration: InputDecoration(
-                                  hintText: "0",
-                                  border: InputBorder.none,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                ),
+                                child: TextFormField(
+                                  controller: _minAmountController,
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  decoration: InputDecoration(
+                                    hintText: "0",
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        IconButton(
-                          padding: EdgeInsets.all(0),
-                          onPressed: () {
-                            setState(() {
-                              int currentAmount = int.tryParse(_minAmountController.text) ?? 0;
-                              currentAmount++;
-                              _minAmountController.text = currentAmount.toString();
-                            });
-                          },
-                          icon: Icon(
-                            Icons.add,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 40,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        IconButton(
-                          padding: EdgeInsets.all(0),
-                          onPressed: () {
-                            setState(() {
-                              int currentAmount = int.tryParse(_minAmountController.text) ?? 0;
-                              if (currentAmount > 0) {
-                                currentAmount--;
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {
+                              setState(() {
+                                int currentAmount = int.tryParse(_minAmountController.text) ?? 0;
+                                currentAmount++;
                                 _minAmountController.text = currentAmount.toString();
-                              }
-                            });
-                          },
-                          icon: Icon(
-                            Icons.remove,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 40,
+                              });
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 40,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SmallActionButton(
-                          svgIconPath: "assets/svg/icons/event2_icon.svg",
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          // CreateButton(),
-          Consumer<SharedPreferencesRepository>(
-            builder: (context, databaseRepository, child) => GestureDetector(
-              onTap: () {
-                createItem(context);
-              },
-              child: Container(
-                height: 48,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  gradient: gradients?.greenGradient,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    "Creat",
-                    style: Theme.of(context).textTheme.labelLarge,
+                          SizedBox(width: 8),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {
+                              setState(() {
+                                int currentAmount = int.tryParse(_minAmountController.text) ?? 0;
+                                if (currentAmount > 0) {
+                                  currentAmount--;
+                                  _minAmountController.text = currentAmount.toString();
+                                }
+                              });
+                            },
+                            icon: Icon(
+                              Icons.remove,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 40,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SmallActionButton(
+                            svgIconPath: "assets/svg/icons/event2_icon.svg",
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ),
-          CustomBottemNavBar(),
-        ],
+      
+            // CreateButton(),
+            Consumer<SharedPreferencesRepository>(
+              builder: (context, databaseRepository, child) => GestureDetector(
+                onTap: () {
+                  createItem(context);
+                },
+                child: Container(
+                  height: 48,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    gradient: gradients?.greenGradient,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Creat",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            CustomBottemNavBar(),
+          ],
+        ),
       ),
     );
   }

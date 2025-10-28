@@ -37,14 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     // final SharedPreferencesRepository repository = SharedPreferencesRepository.instance;
 
-    return Scaffold(
-      
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
-      body: SafeArea(
-         top: true,
-        bottom: true,
-        child: Column(
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: Scaffold(
+        
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
+        body: Column(
           children: [
             CustomSearchBar(),
             // TODO später dynamisch und aus liste / akkordion

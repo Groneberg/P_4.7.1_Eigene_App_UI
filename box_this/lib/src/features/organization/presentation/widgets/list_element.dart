@@ -3,8 +3,9 @@ import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/edit_event_screen%20copy.dart';
+import 'package:box_this/src/features/organization/presentation/screens/edit_event_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_item_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/item_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -205,12 +206,26 @@ class _ListElementState extends State<ListElement> {
   // );
 
   void navigateToBoxDetailScreen(BuildContext context) {
+    var detailScreen;
+    switch (getElementTyp()) {
+      case "box":
+        detailScreen = BoxDetailScreen(box: widget.element);
+        break;
+      case "item":
+        detailScreen = ItemDetailScreen(item: widget.element);
+        break;
+      case "event":
+        // detailScreen = EventDetailScreen(event: widget.element,);
+        break;
+      default:
+        detailScreen = null;
+    }
+
     Navigator.push(
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            BoxDetailScreen(box: widget.element),
+        pageBuilder: (context, animation, secondaryAnimation) => detailScreen,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -227,7 +242,7 @@ class _ListElementState extends State<ListElement> {
         editScreen = EditBoxScreen(box: widget.element);
         break;
       case "item":
-        editScreen = EditItemScreen(item: widget.element,);
+        editScreen = EditItemScreen(item: widget.element);
         break;
       case "event":
         editScreen = EditEventScreen();
@@ -235,13 +250,12 @@ class _ListElementState extends State<ListElement> {
       default:
         editScreen = null;
     }
-    
+
     Navigator.push(
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            editScreen,
+        pageBuilder: (context, animation, secondaryAnimation) => editScreen,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

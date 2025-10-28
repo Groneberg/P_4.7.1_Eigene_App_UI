@@ -18,14 +18,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CreateEventScreen extends StatefulWidget {
-  CreateEventScreen({super.key});
+class EditEventScreen extends StatefulWidget {
+  final Event? event;
+
+  EditEventScreen({super.key, this.event});
+
 
   @override
-  State<CreateEventScreen> createState() => _CreateEventScreenState();
+  State<EditEventScreen> createState() => _CreateEventScreenState();
 }
 
-class _CreateEventScreenState extends State<CreateEventScreen> {
+class _CreateEventScreenState extends State<EditEventScreen> {
   // final MockDatabaseRepository repository = MockDatabaseRepository();
   final _formKey = GlobalKey<FormState>();
 
@@ -37,6 +40,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   final TextEditingController _descriptionController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    final event = widget.event;
+    if (event != null) {
+      _nameController.text = event.name;
+      _dateController.text = event.date;
+      _itemNameController.text = event.time;
+      _descriptionController.text = event.description;
+    }
+  }
   // bool _showDatePicker = false;
 
   // bool _showTimePicker = false;
@@ -140,9 +154,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 padding: EdgeInsets.only(right: 8),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.tertiary,
+                                    color: Theme.of(context).colorScheme.tertiary,
                                   ),
                                 ),
                                 child: TextFormField(
@@ -158,7 +170,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             ),
                           ],
                         ),
-
+      
                         // --------------------
                         Row(
                           children: [
@@ -171,9 +183,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 padding: EdgeInsets.only(right: 8),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.tertiary,
+                                    color: Theme.of(context).colorScheme.tertiary,
                                   ),
                                 ),
                                 child: TextFormField(
@@ -205,9 +215,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 padding: EdgeInsets.only(right: 8),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.tertiary,
+                                    color: Theme.of(context).colorScheme.tertiary,
                                   ),
                                 ),
                                 child: TextFormField(
@@ -228,14 +236,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             ),
                           ],
                         ),
-
+      
                         // --------------------
                         Column(
                           children: [
-                            LabelName(
-                              labelName: "Description",
-                              labelWidth: 200,
-                            ),
+                            LabelName(labelName: "Description", labelWidth: 200),
                             SizedBox(height: 8),
                             DecoratedBox(
                               decoration: BoxDecoration(
@@ -270,28 +275,27 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               ),
               // CreateButton(),
               Consumer<SharedPreferencesRepository>(
-                builder: (context, databaseRepository, child) =>
-                    GestureDetector(
-                      onTap: () {
-                        createEvent(context);
-                      },
-                      child: Container(
-                        height: 48,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          gradient: gradients?.greenGradient,
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Creat",
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                        ),
+                builder: (context, databaseRepository, child) => GestureDetector(
+                  onTap: () {
+                    updateEvent(context);
+                  },
+                  child: Container(
+                    height: 48,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      gradient: gradients?.greenGradient,
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
+                    child: Center(
+                      child: Text(
+                        "Edit",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ),
+                ),
               ),
               CustomBottemNavBar(),
             ],
@@ -301,7 +305,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  void createEvent(BuildContext context) {
+  void updateEvent(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       final databaseRepository = Provider.of<SharedPreferencesRepository>(
         context,
@@ -309,7 +313,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       );
 
       log("Creating Item: ${_nameController.text}");
-      databaseRepository.createEvent(
+      databaseRepository.updateEvent(
         Event(
           name: _nameController.text,
           date: _dateController.text,

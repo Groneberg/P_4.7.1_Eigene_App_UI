@@ -1,26 +1,38 @@
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 
-class ElementDescription extends StatefulWidget {
+class ElementInformation extends StatefulWidget {
   final String description;
+  final String location;
   final bool isExtended;
 
-  const ElementDescription({
+  const ElementInformation({
     super.key,
     this.description = "",
+    this.location = "",
     this.isExtended = true,
   });
 
   @override
-  State<ElementDescription> createState() => _ElementDescriptionState();
+  State<ElementInformation> createState() => _ElementDescriptionState();
 }
 
-class _ElementDescriptionState extends State<ElementDescription> {
+class _ElementDescriptionState extends State<ElementInformation> {
   bool _isExtended = true;
+  String information = "";
+  String title = "";
 
   @override
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
+
+    if (widget.description.isEmpty && widget.location.isNotEmpty) {
+      title = "Location";
+      information = widget.location;
+    } else if (widget.location.isEmpty && widget.description.isNotEmpty) {
+      title = "Description";
+      information = widget.description;
+    } 
 
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -41,7 +53,7 @@ class _ElementDescriptionState extends State<ElementDescription> {
               ),
               Expanded(
                 child: Text(
-                  "Description",
+                  title,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
@@ -77,7 +89,8 @@ class _ElementDescriptionState extends State<ElementDescription> {
                   ),
                 ),
                 child: Text(
-                  widget.description,
+                  
+                  information,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),

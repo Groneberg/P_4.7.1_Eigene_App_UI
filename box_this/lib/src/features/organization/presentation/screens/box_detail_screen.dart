@@ -10,7 +10,7 @@ import 'package:box_this/src/features/organization/presentation/screens/create_e
 import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/accordion_list.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/element_description.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/element_information.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,9 +27,13 @@ class BoxDetailScreen extends StatelessWidget {
 
     Box? foundBox = databaseRepository.mainBox.findBoxByName(box.name);
     if (foundBox == null) {
-      return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(child: CircularProgressIndicator()),
+      return SafeArea(
+        top: true,
+        bottom: true,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
 
@@ -41,68 +45,71 @@ class BoxDetailScreen extends StatelessWidget {
     final String description = databaseRepository.currentBox.description;
     log("Current Box: ${databaseRepository.currentBox.name}");
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      appBar: TiTleAppBar(title: title, setBackIcon: false, icon: "box_icon"),
-      body: Column(
-        children: [
-          CustomSearchBar(),
-          Expanded(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElementDescription(description: description),
-                AccordionList(typ: "Box", box: box),
-                AccordionList(typ: "Item", box: box),
-                AccordionList(typ: "Event", box: box),
-              ],
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        appBar: TiTleAppBar(title: title, setBackIcon: false, icon: "box_icon"),
+        body: Column(
+          children: [
+            CustomSearchBar(),
+            Expanded(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElementInformation(description: description),
+                  AccordionList(typ: "Box", box: box),
+                  AccordionList(typ: "Item", box: box),
+                  AccordionList(typ: "Event", box: box),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 88,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SmallActionButton(
-                  svgIconPath: "assets/svg/icons/box_icon.svg",
-                  onPressed: () {
-                    databaseRepository.currentBox = databaseRepository.mainBox
-                        .findBoxByName(box.name)!;
-                    log("Current Box: ${databaseRepository.currentBox.name}");
-                    navigatetoCreateBoxScreen(context);
-                  },
-                ),
-                SmallActionButton(
-                  svgIconPath: "assets/svg/icons/item_icon.svg",
-                  onPressed: () {
-                    
-                    navigatetoCreateItemScreen(context);
-                  },
-                ),
-                SmallActionButton(
-                  svgIconPath: "assets/svg/icons/event2_icon.svg",
-                  onPressed: () {
-                    navigatetoCreateEventScreen(context);
-                  },
-                ),
-                SmallActionButton(
-                  svgIconPath: "assets/svg/icons/edit_icon.svg",
-                  onPressed: () {
-                    navigateToEditBoxScreen(box, context);
-                  },
-                ),
-                SmallActionButton(
-                  svgIconPath: "assets/svg/icons/delete_icon.svg",
-                  onPressed: () {
-                    Navigator.pop(context);
-                    databaseRepository.deleteBox(box.name);
-                  },
-                ),
-              ],
+            SizedBox(
+              height: 88,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SmallActionButton(
+                    svgIconPath: "assets/svg/icons/box_icon.svg",
+                    onPressed: () {
+                      databaseRepository.currentBox = databaseRepository.mainBox
+                          .findBoxByName(box.name)!;
+                      log("Current Box: ${databaseRepository.currentBox.name}");
+                      navigatetoCreateBoxScreen(context);
+                    },
+                  ),
+                  SmallActionButton(
+                    svgIconPath: "assets/svg/icons/item_icon.svg",
+                    onPressed: () {
+                      navigatetoCreateItemScreen(context);
+                    },
+                  ),
+                  SmallActionButton(
+                    svgIconPath: "assets/svg/icons/event2_icon.svg",
+                    onPressed: () {
+                      navigatetoCreateEventScreen(context);
+                    },
+                  ),
+                  SmallActionButton(
+                    svgIconPath: "assets/svg/icons/edit_icon.svg",
+                    onPressed: () {
+                      navigateToEditBoxScreen(box, context);
+                    },
+                  ),
+                  SmallActionButton(
+                    svgIconPath: "assets/svg/icons/delete_icon.svg",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      databaseRepository.deleteBox(box.name);
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          CustomBottemNavBar(),
-        ],
+            CustomBottemNavBar(),
+          ],
+        ),
       ),
     );
   }
@@ -129,7 +136,8 @@ class BoxDetailScreen extends StatelessWidget {
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) => CreateItemScreen(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            CreateItemScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

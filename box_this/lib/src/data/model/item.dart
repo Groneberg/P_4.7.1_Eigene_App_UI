@@ -7,7 +7,7 @@ class Item {
 
   String name;
   String description;
-  String? location;
+  String location;
   int amount = 0;
   int minAmount = 0;
   Map<String, Event> events = {};
@@ -17,7 +17,7 @@ class Item {
     parentId = "",
     required this.name,
     required this.description,
-    this.location,
+    required this.location,
     this.amount = 0,
     this.minAmount = 0,
   });
@@ -35,7 +35,7 @@ class Item {
       parentId: json['parentId'] as String?,
       name: json['name'] as String,
       description: json['description'] as String,
-      location: json['location'] as String?,
+      location: json['location'] as String,
       amount: json['amount'] as int,
       minAmount: json['minAmount'] as int,
     )..events = reconstructedEvents; // Fügt die rekonstruierten Events hinzu
