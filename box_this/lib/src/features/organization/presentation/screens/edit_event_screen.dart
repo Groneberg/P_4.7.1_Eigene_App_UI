@@ -20,9 +20,9 @@ import 'package:provider/provider.dart';
 
 class EditEventScreen extends StatefulWidget {
   final Event? event;
+  final String? itemName;
 
-  EditEventScreen({super.key, this.event});
-
+  EditEventScreen({super.key, this.event, this.itemName});
 
   @override
   State<EditEventScreen> createState() => _CreateEventScreenState();
@@ -111,7 +111,7 @@ class _CreateEventScreenState extends State<EditEventScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: TiTleAppBar(
-          title: "Create Event",
+          title: "Edit Event",
           setBackIcon: false,
           icon: "event_icon",
         ),
@@ -312,38 +312,26 @@ class _CreateEventScreenState extends State<EditEventScreen> {
         listen: false,
       );
 
-      log("Creating Item: ${_nameController.text}");
-      databaseRepository.updateEvent(
-        Event(
-          name: _nameController.text,
-          date: _dateController.text,
-          time: _itemNameController.text,
-          description: _descriptionController.text,
-        ),
+      final Event updatedEvent = Event(
+        name: _nameController.text,
+        date: _dateController.text,
+        time: _itemNameController.text,
+        description: _descriptionController.text,
       );
-      navigatetoBoxDetailScreen(context);
+
+      if (widget.itemName != null) {
+        log("Updating Event in Item: ${widget.itemName}");
+        databaseRepository.updateEventInItem(updatedEvent, widget.itemName!);
+      } else {
+        log("Updating Event in Box: ${updatedEvent.name}");
+        databaseRepository.updateEvent(updatedEvent);
+      }
+
+      Navigator.pop(context);
     } else {
-      // TODO bessere Fehlerbehandlung
       log("Form is not valid");
     }
   }
-}
-
-// TODO später Navigation anpassen Item oder Box screen
-void navigatetoHomeScreen(BuildContext context) {
-  Navigator.push(
-    context,
-    PageRouteBuilder(
-      transitionDuration: Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(opacity: animation, child: child);
-      },
-    ),
-    // MaterialPageRoute(
-    //   builder: (context) => HomeScreen(),
-    // ),
-  );
 }
 
 void navigatetoBoxDetailScreen(BuildContext context) {

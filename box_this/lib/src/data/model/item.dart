@@ -1,4 +1,4 @@
-import 'Event.dart';
+import 'package:box_this/src/data/model/event.dart';
 
 /// Represents an item with a name, description, amount, and associated events.
 class Item {

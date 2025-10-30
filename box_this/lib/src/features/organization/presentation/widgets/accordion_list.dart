@@ -8,8 +8,10 @@ import 'package:provider/provider.dart';
 class AccordionList extends StatefulWidget {
   final String typ;
   final Box box;
+  final bool inBox;
+  final String itemName;
 
-  const AccordionList({super.key, required this.typ, required this.box});
+  const AccordionList({super.key, required this.typ, required this.box , this.inBox = false, this.itemName = ""});
 
   @override
   State<AccordionList> createState() => _AccordionListState();
@@ -26,6 +28,8 @@ class _AccordionListState extends State<AccordionList> {
         return widget.box.items;
       case "Event":
         return widget.box.events;
+      case "EventInItem":
+        return widget.box.items[widget.itemName]?.events ?? {};
       default:
         return {};
     }
@@ -37,18 +41,22 @@ class _AccordionListState extends State<AccordionList> {
 
     switch (typ) {
       case "Box":
-        databaseRepository.currentBox.boxes.remove(name);
+        databaseRepository.deleteBox( name);
+        // databaseRepository.currentBox.boxes.remove(name);
         break;
       case "Item":
-        databaseRepository.currentBox.items.remove(name);
+        databaseRepository.deleteItem(name);
+        // databaseRepository.currentBox.items.remove(name);
         break;
       case "Event":
-        databaseRepository.currentBox.events.remove(name);
+        databaseRepository.deleteEvent(name);
+        // databaseRepository.currentBox.events.remove(name);
+      case "EventInItem":
+        databaseRepository.deleteEventInItem(widget.itemName, name);
         break;
       default:
         break;
     }
-    databaseRepository.deleteEvent(name);
     // databaseRepository.updateBox(Box(name: databaseRepository.currentBox.name, description: databaseRepository.currentBox.description, ), );
   }
 
@@ -107,9 +115,9 @@ class _AccordionListState extends State<AccordionList> {
               var element = elements[key];
               return ListElement(
                 element: element,
+                itemName: (widget.typ == "EventInItem") ? widget.itemName : "",
                 onDelete: () {
                   deleteElementByTyp(widget.typ, key);
-                  setState(() {});
                 },
               );
             },

@@ -1,6 +1,7 @@
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
+import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_event_screen.dart';
@@ -12,7 +13,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ListElement extends StatefulWidget {
   final dynamic element;
   final VoidCallback onDelete;
-  const ListElement({super.key, required this.element, required this.onDelete});
+  final String itemName;
+
+  const ListElement({super.key, required this.element, required this.onDelete, this.itemName = ""});
 
   @override
   State<ListElement> createState() => _ListElementState();
@@ -196,16 +199,8 @@ class _ListElementState extends State<ListElement> {
     );
   }
 
-  // TODO später Navigation anpassen / EditBoxScreen bauen
-  // void navigateToEditBoxScreen(BuildContext context) {
-  //   Navigator.push(
-  //   context,
-  //   MaterialPageRoute(
-  //     builder: (context) => EditBoxScreen(),
-  //   ),
-  // );
-
   void navigateToBoxDetailScreen(BuildContext context) {
+    SharedPreferencesRepository.instance.currentBox = widget.element;
     var detailScreen;
     switch (getElementTyp()) {
       case "box":
@@ -245,7 +240,9 @@ class _ListElementState extends State<ListElement> {
         editScreen = EditItemScreen(item: widget.element);
         break;
       case "event":
-        editScreen = EditEventScreen();
+        editScreen = EditEventScreen(event: widget.element,
+        itemName: widget.itemName.isNotEmpty ? widget.itemName : null,
+        );
         break;
       default:
         editScreen = null;

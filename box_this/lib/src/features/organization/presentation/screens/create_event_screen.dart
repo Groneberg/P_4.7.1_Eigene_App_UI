@@ -8,7 +8,9 @@ import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/item_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/themed_time_picker.dart';
 
@@ -19,7 +21,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class CreateEventScreen extends StatefulWidget {
-  CreateEventScreen({super.key});
+  final Item? item;
+  final bool fromBoxDetailScreen;
+  final bool fromItemDetailScreen;
+  final bool fromCreateItemScreen;
+
+  CreateEventScreen({
+    super.key,
+    this.item,
+    this.fromBoxDetailScreen = false,
+    this.fromItemDetailScreen = false,
+    this.fromCreateItemScreen = false,
+  });
 
   @override
   State<CreateEventScreen> createState() => _CreateEventScreenState();
@@ -307,17 +320,37 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         context,
         listen: false,
       );
-
-      log("Creating Item: ${_nameController.text}");
-      databaseRepository.createEvent(
-        Event(
-          name: _nameController.text,
-          date: _dateController.text,
-          time: _itemNameController.text,
-          description: _descriptionController.text,
-        ),
-      );
-      navigatetoBoxDetailScreen(context);
+      if (widget.fromBoxDetailScreen) {
+        log("Creating Item: ${_nameController.text}");
+        databaseRepository.createEvent(
+          Event(
+            name: _nameController.text,
+            date: _dateController.text,
+            time: _itemNameController.text,
+            description: _descriptionController.text,
+          ),
+        );
+        navigateBackTo(context, widget.item, true, false, false);
+      } else if (widget.item != null) {
+        log("Creating Item in Item: ${_nameController.text}");
+        databaseRepository.createEventInItem(
+          Event(
+            name: _nameController.text,
+            date: _dateController.text,
+            time: _itemNameController.text,
+            description: _descriptionController.text,
+          ),
+          widget.item!,
+        );
+        databaseRepository.updateBox(databaseRepository.currentBox);
+        navigateBackTo(
+          context,
+          widget.item,
+          false,
+          widget.fromItemDetailScreen,
+          widget.fromCreateItemScreen,
+        );
+      }
     } else {
       // TODO bessere Fehlerbehandlung
       log("Form is not valid");
@@ -342,13 +375,31 @@ void navigatetoHomeScreen(BuildContext context) {
   );
 }
 
-void navigatetoBoxDetailScreen(BuildContext context) {
+void navigateBackTo(
+  BuildContext context,
+  Item? item,
+  bool fromBoxDetailScreen,
+  bool fromItemDetailScreen,
+  bool fromCreateItemScreen,
+) {
+  var priviousScreen;
+  if (fromBoxDetailScreen) {
+    priviousScreen = BoxDetailScreen(
+      box: SharedPreferencesRepository.instance.currentBox,
+    );
+  } else if (fromItemDetailScreen && item != null) {
+    priviousScreen = ItemDetailScreen(item: item);
+  } else if (fromCreateItemScreen) {
+    priviousScreen = CreateItemScreen();
+  } else {
+    priviousScreen = HomeScreen();
+  }
+
   Navigator.push(
     context,
     PageRouteBuilder(
       transitionDuration: Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          BoxDetailScreen(box: SharedPreferencesRepository.instance.currentBox),
+      pageBuilder: (context, animation, secondaryAnimation) => priviousScreen,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(opacity: animation, child: child);
       },

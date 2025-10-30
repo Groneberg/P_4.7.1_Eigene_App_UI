@@ -14,15 +14,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CreateBoxScreen extends StatelessWidget {
+class CreateBoxScreen extends StatefulWidget {
+
+  CreateBoxScreen({super.key});
+
+  @override
+  State<CreateBoxScreen> createState() => _CreateBoxScreenState();
+}
+
+class _CreateBoxScreenState extends State<CreateBoxScreen> {
   // final MockDatabaseRepository repository = MockDatabaseRepository();
-  // final SharedPreferencesRepository repository =
-  //     SharedPreferencesRepository.instance;
   final TextEditingController boxNameController = TextEditingController();
+
   final TextEditingController boxDescriptionController =
       TextEditingController();
 
-  CreateBoxScreen({super.key});
+  @override
+  void dispose() {
+    boxNameController.dispose();
+    boxDescriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,11 +192,7 @@ class CreateBoxScreen extends StatelessWidget {
       ),
     );
     log("Current Boxes: ${databaseRepository.currentBox.boxes}");
-    if (databaseRepository.currentBox.name != databaseRepository.mainBox.name) {
-      Navigator.pop(context);
-    } else {
-      navigatetoHomeScreen(context);
-    }
+    Navigator.pop(context);
   }
 
   // TODO später Navigation anpassen

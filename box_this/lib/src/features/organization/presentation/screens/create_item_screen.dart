@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
+import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
+import 'package:box_this/src/features/organization/presentation/screens/create_event_screen.dart';
 // import 'package:box_this/src/features/organization/presentation/widgets/amount_input.dart';
 // import 'package:box_this/src/features/organization/presentation/widgets/element_text_input.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
@@ -30,6 +32,8 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _minAmountController = TextEditingController();
+
+  final List<Event> _pendingEvents = [];
 
   @override
   void dispose() {
@@ -61,7 +65,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
           location: _locationController.text,
         ),
       );
-      navigatetoBoxDetailScreen(context);
+      Navigator.pop(context);
     } else {
       // TODO bessere Fehlerbehandlung
       log("Form is not valid");
@@ -85,7 +89,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
         body: Column(
           children: [
             CustomSearchBar(),
-      
+
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 24, right: 24, left: 24.0),
@@ -233,9 +237,11 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                             padding: EdgeInsets.all(0),
                             onPressed: () {
                               setState(() {
-                                int currentAmount = int.tryParse(_amountController.text) ?? 0;
+                                int currentAmount =
+                                    int.tryParse(_amountController.text) ?? 0;
                                 currentAmount++;
-                                _amountController.text = currentAmount.toString();
+                                _amountController.text = currentAmount
+                                    .toString();
                               });
                             },
                             icon: Icon(
@@ -249,10 +255,12 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                             padding: EdgeInsets.all(0),
                             onPressed: () {
                               setState(() {
-                                int currentAmount = int.tryParse(_amountController.text) ?? 0;
+                                int currentAmount =
+                                    int.tryParse(_amountController.text) ?? 0;
                                 if (currentAmount > 0) {
                                   currentAmount--;
-                                  _amountController.text = currentAmount.toString();
+                                  _amountController.text = currentAmount
+                                      .toString();
                                 }
                               });
                             },
@@ -296,9 +304,12 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                             padding: EdgeInsets.all(0),
                             onPressed: () {
                               setState(() {
-                                int currentAmount = int.tryParse(_minAmountController.text) ?? 0;
+                                int currentAmount =
+                                    int.tryParse(_minAmountController.text) ??
+                                    0;
                                 currentAmount++;
-                                _minAmountController.text = currentAmount.toString();
+                                _minAmountController.text = currentAmount
+                                    .toString();
                               });
                             },
                             icon: Icon(
@@ -312,10 +323,13 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                             padding: EdgeInsets.all(0),
                             onPressed: () {
                               setState(() {
-                                int currentAmount = int.tryParse(_minAmountController.text) ?? 0;
+                                int currentAmount =
+                                    int.tryParse(_minAmountController.text) ??
+                                    0;
                                 if (currentAmount > 0) {
                                   currentAmount--;
-                                  _minAmountController.text = currentAmount.toString();
+                                  _minAmountController.text = currentAmount
+                                      .toString();
                                 }
                               });
                             },
@@ -332,7 +346,44 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                         children: [
                           SmallActionButton(
                             svgIconPath: "assets/svg/icons/event2_icon.svg",
-                            onPressed: () {},
+                            onPressed: () async {
+                              final Event? newEvent =
+                                  await Navigator.push<Event>(
+                                    context,
+                                    PageRouteBuilder(
+                                      transitionDuration: Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      pageBuilder:
+                                          (
+                                            context,
+                                            animation,
+                                            secondaryAnimation,
+                                          ) => CreateEventScreen(
+                                            fromCreateItemScreen: true,
+                                          ),
+                                      transitionsBuilder:
+                                          (
+                                            context,
+                                            animation,
+                                            secondaryAnimation,
+                                            child,
+                                          ) {
+                                            return FadeTransition(
+                                              opacity: animation,
+                                              child: child,
+                                            );
+                                          },
+                                    ),
+                                  );
+                              if (newEvent != null) {
+                                setState(() {
+                                  _pendingEvents.add(newEvent);
+                                });
+                              }
+                              
+                            },
+
                           ),
                         ],
                       ),
@@ -341,7 +392,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                 ),
               ),
             ),
-      
+
             // CreateButton(),
             Consumer<SharedPreferencesRepository>(
               builder: (context, databaseRepository, child) => GestureDetector(
@@ -373,12 +424,15 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
     );
   }
 
-    void navigatetoBoxDetailScreen(BuildContext context) {
+  void navigatetoBoxDetailScreen(BuildContext context) {
     Navigator.push(
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) => BoxDetailScreen(box: SharedPreferencesRepository.instance.currentBox),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            BoxDetailScreen(
+              box: SharedPreferencesRepository.instance.currentBox,
+            ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -388,5 +442,4 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
       // ),
     );
   }
-
 }

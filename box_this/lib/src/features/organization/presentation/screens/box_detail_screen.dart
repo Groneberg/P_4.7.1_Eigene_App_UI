@@ -37,9 +37,6 @@ class BoxDetailScreen extends StatelessWidget {
       );
     }
 
-    databaseRepository.currentBox = databaseRepository.mainBox.findBoxByName(
-      box.name,
-    )!;
 
     final String title = databaseRepository.currentBox.name;
     final String description = databaseRepository.currentBox.description;
@@ -61,7 +58,7 @@ class BoxDetailScreen extends StatelessWidget {
                   ElementInformation(description: description),
                   AccordionList(typ: "Box", box: box),
                   AccordionList(typ: "Item", box: box),
-                  AccordionList(typ: "Event", box: box),
+                  AccordionList(typ: "Event", box: box, inBox: true,),
                 ],
               ),
             ),
@@ -170,7 +167,7 @@ class BoxDetailScreen extends StatelessWidget {
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) =>
-            CreateEventScreen(),
+            CreateEventScreen(fromBoxDetailScreen: true,),
       ),
       // MaterialPageRoute(
       //   builder: (context) => CreateEventScreen(),

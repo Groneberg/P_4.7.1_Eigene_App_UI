@@ -52,15 +52,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     log("Current Box: ${databaseRepository.currentBox.name}");
 
     TextEditingController _amountController = TextEditingController(
-      text: databaseRepository.currentBox.items[name]!
-          .amount
-          .toString(),
+      text: databaseRepository.currentBox.items[name]!.amount.toString(),
       // text: widget.item.amount.toString(),
     );
     TextEditingController _minAmountController = TextEditingController(
-      text: databaseRepository.currentBox.items[name]!
-          .minAmount
-          .toString(),
+      text: databaseRepository.currentBox.items[name]!.minAmount.toString(),
       // text: widget.item.minAmount.toString(),
     );
 
@@ -114,20 +110,19 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         IconButton(
                           padding: EdgeInsets.all(0),
                           onPressed: () {
-                            setState(() {
-                              int currentAmount =
-                                  int.tryParse(_amountController.text) ?? 0;
-                              currentAmount++;
-                              _amountController.text = currentAmount.toString();
-                              databaseRepository
-                                      .currentBox
-                                      .items[name]!
-                                      .amount =
-                                  currentAmount;
-                              databaseRepository.updateItem(
-                                databaseRepository.currentBox.items[name]!,
-                              );
-                            });
+                            int currentAmount =
+                                int.tryParse(_amountController.text) ?? 0;
+                            int currentMinAmount =
+                                int.tryParse(_minAmountController.text) ?? 0;
+                            currentAmount++;
+                            _amountController.text = currentAmount.toString();
+                            context
+                                .read<SharedPreferencesRepository>()
+                                .updateItemAmount(
+                                  widget.item.name,
+                                  currentAmount,
+                                  currentMinAmount,
+                                );
                           },
                           icon: Icon(
                             Icons.add,
@@ -139,23 +134,19 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         IconButton(
                           padding: EdgeInsets.all(0),
                           onPressed: () {
-                            setState(() {
-                              int currentAmount =
-                                  int.tryParse(_amountController.text) ?? 0;
-                              if (currentAmount > 0) {
-                                currentAmount--;
-                                _amountController.text = currentAmount
-                                    .toString();
-                                databaseRepository
-                                        .currentBox
-                                        .items[name]!
-                                        .amount =
-                                    currentAmount;
-                                databaseRepository.updateItem(
-                                  databaseRepository.currentBox.items[name]!,
+                            int currentAmount =
+                                int.tryParse(_amountController.text) ?? 0;
+                            int currentMinAmount =
+                                int.tryParse(_minAmountController.text) ?? 0;
+                            currentAmount--;
+                            _amountController.text = currentAmount.toString();
+                            context
+                                .read<SharedPreferencesRepository>()
+                                .updateItemAmount(
+                                  widget.item.name,
+                                  currentAmount,
+                                  currentMinAmount,
                                 );
-                              }
-                            });
                           },
                           icon: Icon(
                             Icons.remove,
@@ -203,21 +194,19 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         IconButton(
                           padding: EdgeInsets.all(0),
                           onPressed: () {
-                            setState(() {
-                              int currentAmount =
-                                  int.tryParse(_minAmountController.text) ?? 0;
-                              currentAmount++;
-                              _minAmountController.text = currentAmount
-                                  .toString();
-                              databaseRepository
-                                      .currentBox
-                                      .items[name]!
-                                      .minAmount =
-                                  currentAmount;
-                              databaseRepository.updateItem(
-                                databaseRepository.currentBox.items[name]!,
-                              );
-                            });
+                            int currentAmount =
+                                int.tryParse(_amountController.text) ?? 0;
+                            int currentMinAmount =
+                                int.tryParse(_minAmountController.text) ?? 0;
+                            currentMinAmount++;
+                            _amountController.text = currentAmount.toString();
+                            context
+                                .read<SharedPreferencesRepository>()
+                                .updateItemAmount(
+                                  widget.item.name,
+                                  currentAmount,
+                                  currentMinAmount,
+                                );
                           },
                           icon: Icon(
                             Icons.add,
@@ -229,23 +218,19 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         IconButton(
                           padding: EdgeInsets.all(0),
                           onPressed: () {
-                            setState(() {
-                              int currentAmount =
-                                  int.tryParse(_minAmountController.text) ?? 0;
-                              if (currentAmount > 0) {
-                                currentAmount--;
-                                _minAmountController.text = currentAmount
-                                    .toString();
-                                databaseRepository
-                                        .currentBox
-                                        .items[name]!
-                                        .minAmount =
-                                    currentAmount;
-                                databaseRepository.updateItem(
-                                  databaseRepository.currentBox.items[name]!,
+                            int currentAmount =
+                                int.tryParse(_amountController.text) ?? 0;
+                            int currentMinAmount =
+                                int.tryParse(_minAmountController.text) ?? 0;
+                            currentMinAmount--;
+                            _amountController.text = currentAmount.toString();
+                            context
+                                .read<SharedPreferencesRepository>()
+                                .updateItemAmount(
+                                  widget.item.name,
+                                  currentAmount,
+                                  currentMinAmount,
                                 );
-                              }
-                            });
                           },
                           icon: Icon(
                             Icons.remove,
@@ -259,8 +244,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   SizedBox(height: 16),
 
                   AccordionList(
-                    typ: "Event",
+                    typ: "EventInItem",
                     box: databaseRepository.currentBox,
+                    inBox: false,
+                    itemName: widget.item.name,
                   ),
                 ],
               ),
@@ -275,7 +262,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   SmallActionButton(
                     svgIconPath: "assets/svg/icons/event2_icon.svg",
                     onPressed: () {
-                      navigatetoCreateEventScreen(context);
+                      navigatetoCreateEventScreen(
+                        context,
+                        widget.item,
+                        true,
+                        false,
+                      );
                     },
                   ),
                   SmallActionButton(
@@ -334,13 +326,23 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     );
   }
 
-  void navigatetoCreateEventScreen(BuildContext context) {
+  void navigatetoCreateEventScreen(
+    BuildContext context,
+    Item item,
+    bool fromItemDetailScreen,
+    bool fromCreateItemScreen,
+  ) {
     Navigator.push(
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) =>
-            CreateEventScreen(),
+            CreateEventScreen(
+              item: item,
+              fromBoxDetailScreen: false,
+              fromItemDetailScreen: true,
+              fromCreateItemScreen: false,
+            ),
       ),
       // MaterialPageRoute(
       //   builder: (context) => CreateEventScreen(),

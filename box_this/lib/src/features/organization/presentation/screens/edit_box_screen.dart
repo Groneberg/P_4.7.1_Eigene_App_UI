@@ -39,6 +39,13 @@ class _EditBoxScreenState extends State<EditBoxScreen> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
 
@@ -186,31 +193,14 @@ class _EditBoxScreenState extends State<EditBoxScreen> {
       listen: false,
     );
     log("mainBox before creating new box: ${databaseRepository.mainBox}");
-    databaseRepository.updateBox(
-      Box(name: _nameController.text, description: _descriptionController.text),
-    );
-    log("Current Boxes: ${databaseRepository.currentBox.boxes}");
-    if (databaseRepository.currentBox.name != databaseRepository.mainBox.name) {
-      Navigator.pop(context);
-    } else {
-      navigatetoHomeScreen(context);
-    }
-  }
 
-  // TODO später Navigation anpassen
-  void navigatetoHomeScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-      ),
-      // MaterialPageRoute(
-      //   builder: (context) => HomeScreen(),
-      // ),
-    );
+    Box boxToUpdate = widget.box!;
+
+    boxToUpdate.name = _nameController.text;
+    boxToUpdate.description = _descriptionController.text;
+
+    databaseRepository.updateBox(boxToUpdate);
+
+    Navigator.pop(context);
   }
 }

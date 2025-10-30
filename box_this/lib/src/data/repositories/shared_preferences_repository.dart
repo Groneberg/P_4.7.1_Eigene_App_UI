@@ -8,7 +8,8 @@ import 'package:box_this/src/data/repositories/database_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepository {
+class SharedPreferencesRepository extends ChangeNotifier
+    implements DatabaseRepository {
   Box mainBox = Box(name: "mainBox", description: "");
   Box currentBox = Box(name: "currentBox", description: "");
 
@@ -61,6 +62,15 @@ class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepo
     await _persistBoxes(jsonString);
   }
 
+  Future<void> createEventInItem(Event event, Item item) async {
+    item.events[event.name] = event;
+    currentBox.items[item.name] = item;
+    String jsonString = encodeMapToJson(mainBox);
+    log("This event in item will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
+  }
+
   @override
   Future<void> createItem(Item item) async {
     currentBox.items[item.name] = item;
@@ -83,10 +93,10 @@ class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepo
     } else {
       log("Parent box not found for current box: ${currentBox.name}");
     }
-      String jsonString = encodeMapToJson(mainBox);
-      log("This box will be saved as JSON: $jsonString");
-      notifyListeners();
-      await _persistBoxes(jsonString);
+    String jsonString = encodeMapToJson(mainBox);
+    log("This box will be saved as JSON: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
   }
 
   @override
@@ -96,6 +106,21 @@ class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepo
     log("This event will be saved as JSON: $jsonString");
     notifyListeners();
     await _persistBoxes(jsonString);
+  }
+
+  Future<void> deleteEventInItem(String eventName, String itemName) async {
+    Item? item = currentBox.items[itemName];
+
+    if (item != null) {
+      item.events.remove(eventName);
+      String jsonString = encodeMapToJson(mainBox);
+      log("Event '$eventName' in Item '$itemName' wird gelöscht.");
+      notifyListeners();
+      await _persistBoxes(jsonString);
+    } else {
+    log("Item not found: $itemName. Event could not be deleted.");
+  }
+
   }
 
   @override
@@ -177,6 +202,33 @@ class SharedPreferencesRepository extends ChangeNotifier implements DatabaseRepo
     notifyListeners();
     await _persistBoxes(jsonString);
   }
+
+  Future<void> updateEventInItem(Event event, String itemName) async {
+  Item? item = currentBox.items[itemName];
+  if (item != null) {
+    item.events[event.name] = event; 
+
+    String jsonString = encodeMapToJson(mainBox);
+    log("Event in Item updated: $jsonString");
+    notifyListeners();
+    await _persistBoxes(jsonString);
+  } else {
+    log("Item not found: $itemName. Event could not be updated.");
+  }
+}
+
+  Future<void> updateItemAmount(String itemName, int newAmount, int newMinAmount) async {
+  Item? item = currentBox.items[itemName];
+  if (item != null) {
+    item.amount = newAmount;
+    item.minAmount = newMinAmount;
+    
+    String jsonString = encodeMapToJson(mainBox);
+    log("Item amount updated: $jsonString");
+    notifyListeners(); 
+    await _persistBoxes(jsonString);
+  }
+}
 
   // Future<void> _persistTasks() async {
   //   try {
