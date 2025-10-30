@@ -381,7 +381,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                                   _pendingEvents.add(newEvent);
                                 });
                               }
-                              
+
                             },
 
                           ),
