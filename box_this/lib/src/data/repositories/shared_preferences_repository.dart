@@ -118,9 +118,8 @@ class SharedPreferencesRepository extends ChangeNotifier
       notifyListeners();
       await _persistBoxes(jsonString);
     } else {
-    log("Item not found: $itemName. Event could not be deleted.");
-  }
-
+      log("Item not found: $itemName. Event could not be deleted.");
+    }
   }
 
   @override
@@ -204,31 +203,35 @@ class SharedPreferencesRepository extends ChangeNotifier
   }
 
   Future<void> updateEventInItem(Event event, String itemName) async {
-  Item? item = currentBox.items[itemName];
-  if (item != null) {
-    item.events[event.name] = event; 
+    Item? item = currentBox.items[itemName];
+    if (item != null) {
+      item.events[event.name] = event;
 
-    String jsonString = encodeMapToJson(mainBox);
-    log("Event in Item updated: $jsonString");
-    notifyListeners();
-    await _persistBoxes(jsonString);
-  } else {
-    log("Item not found: $itemName. Event could not be updated.");
+      String jsonString = encodeMapToJson(mainBox);
+      log("Event in Item updated: $jsonString");
+      notifyListeners();
+      await _persistBoxes(jsonString);
+    } else {
+      log("Item not found: $itemName. Event could not be updated.");
+    }
   }
-}
 
-  Future<void> updateItemAmount(String itemName, int newAmount, int newMinAmount) async {
-  Item? item = currentBox.items[itemName];
-  if (item != null) {
-    item.amount = newAmount;
-    item.minAmount = newMinAmount;
-    
-    String jsonString = encodeMapToJson(mainBox);
-    log("Item amount updated: $jsonString");
-    notifyListeners(); 
-    await _persistBoxes(jsonString);
+  Future<void> updateItemAmount(
+    String itemName,
+    int newAmount,
+    int newMinAmount,
+  ) async {
+    Item? item = currentBox.items[itemName];
+    if (item != null) {
+      item.amount = newAmount;
+      item.minAmount = newMinAmount;
+
+      String jsonString = encodeMapToJson(mainBox);
+      log("Item amount updated: $jsonString");
+      notifyListeners();
+      await _persistBoxes(jsonString);
+    }
   }
-}
 
   // Future<void> _persistTasks() async {
   //   try {

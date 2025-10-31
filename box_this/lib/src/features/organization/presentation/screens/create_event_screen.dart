@@ -6,6 +6,7 @@ import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
+import 'package:box_this/src/data/provider/item_creation_provider.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
@@ -26,12 +27,15 @@ class CreateEventScreen extends StatefulWidget {
   final bool fromItemDetailScreen;
   final bool fromCreateItemScreen;
 
+  final void Function(Event event)? onEventCreatedForTempItem;
+
   CreateEventScreen({
     super.key,
     this.item,
     this.fromBoxDetailScreen = false,
     this.fromItemDetailScreen = false,
     this.fromCreateItemScreen = false,
+    this.onEventCreatedForTempItem,
   });
 
   @override
@@ -320,36 +324,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         context,
         listen: false,
       );
-      if (widget.fromBoxDetailScreen) {
+      final Event newEvent = Event(
+        name: _nameController.text,
+        date: _dateController.text,
+        time: _itemNameController.text,
+        description: _descriptionController.text,
+      );
+      if (widget.fromCreateItemScreen) {
+        widget.onEventCreatedForTempItem?.call(newEvent);
+        Navigator.pop(context);
+      } else if (widget.fromItemDetailScreen && widget.item != null) {
         log("Creating Item: ${_nameController.text}");
-        databaseRepository.createEvent(
-          Event(
-            name: _nameController.text,
-            date: _dateController.text,
-            time: _itemNameController.text,
-            description: _descriptionController.text,
-          ),
-        );
-        navigateBackTo(context, widget.item, true, false, false);
-      } else if (widget.item != null) {
-        log("Creating Item in Item: ${_nameController.text}");
-        databaseRepository.createEventInItem(
-          Event(
-            name: _nameController.text,
-            date: _dateController.text,
-            time: _itemNameController.text,
-            description: _descriptionController.text,
-          ),
-          widget.item!,
-        );
-        databaseRepository.updateBox(databaseRepository.currentBox);
-        navigateBackTo(
-          context,
-          widget.item,
-          false,
-          widget.fromItemDetailScreen,
-          widget.fromCreateItemScreen,
-        );
+
+        widget.item!.addEvent(newEvent);
+        databaseRepository.updateItem(widget.item!);
+        Navigator.pop(context);
+      } else if (widget.fromBoxDetailScreen) {
+        databaseRepository.createEvent(newEvent);
+        Navigator.pop(context);
+      } else {
+        log("No creation context found, event not created.");
       }
     } else {
       // TODO bessere Fehlerbehandlung

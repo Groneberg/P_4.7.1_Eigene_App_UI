@@ -5,11 +5,10 @@ import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
+import 'package:box_this/src/data/provider/item_creation_provider.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_event_screen.dart';
-// import 'package:box_this/src/features/organization/presentation/widgets/amount_input.dart';
-// import 'package:box_this/src/features/organization/presentation/widgets/element_text_input.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
@@ -50,21 +49,29 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
         context,
         listen: false,
       );
-
-      log("Creating Item: ${_itemNameController.text}");
-      databaseRepository.createItem(
-        Item(
-          name: _itemNameController.text,
-          description: _descriptionController.text,
-          amount: _amountController.text.isEmpty
-              ? 0
-              : int.parse(_amountController.text),
-          minAmount: _minAmountController.text.isEmpty
-              ? 0
-              : int.parse(_minAmountController.text),
-          location: _locationController.text,
-        ),
+      final creationProvider = Provider.of<ItemCreationProvider>(
+        context,
+        listen: false,
       );
+
+      creationProvider.updateItemDetails(
+        name: _itemNameController.text,
+        description: _descriptionController.text,
+        location: _locationController.text,
+        amount: _amountController.text.isEmpty
+            ? 0
+            : int.parse(_amountController.text),
+        minAmount: _minAmountController.text.isEmpty
+            ? 0
+            : int.parse(_minAmountController.text),
+      );
+
+      final Item itemToCreate = creationProvider.item;
+
+      log(
+        "Creating Item: ${itemToCreate.name} with ${itemToCreate.events.length} events",
+      );
+      databaseRepository.createItem(itemToCreate);
       Navigator.pop(context);
     } else {
       // TODO bessere Fehlerbehandlung
@@ -347,43 +354,26 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                           SmallActionButton(
                             svgIconPath: "assets/svg/icons/event2_icon.svg",
                             onPressed: () async {
-                              final Event? newEvent =
-                                  await Navigator.push<Event>(
+                              final creationProvider =
+                                  Provider.of<ItemCreationProvider>(
                                     context,
-                                    PageRouteBuilder(
-                                      transitionDuration: Duration(
-                                        milliseconds: 300,
-                                      ),
-                                      pageBuilder:
-                                          (
-                                            context,
-                                            animation,
-                                            secondaryAnimation,
-                                          ) => CreateEventScreen(
-                                            fromCreateItemScreen: true,
-                                          ),
-                                      transitionsBuilder:
-                                          (
-                                            context,
-                                            animation,
-                                            secondaryAnimation,
-                                            child,
-                                          ) {
-                                            return FadeTransition(
-                                              opacity: animation,
-                                              child: child,
-                                            );
-                                          },
-                                    ),
+                                    listen: false,
                                   );
-                              if (newEvent != null) {
-                                setState(() {
-                                  _pendingEvents.add(newEvent);
-                                });
-                              }
+                              creationProvider.updateItemDetails(
+                                name: _itemNameController.text,
+                                description: _descriptionController.text,
+                                location: _locationController.text,
+                                amount: _amountController.text.isEmpty
+                                    ? 0
+                                    : int.parse(_amountController.text),
+                                minAmount: _minAmountController.text.isEmpty
+                                    ? 0
+                                    : int.parse(_minAmountController.text),
+                              );
 
+                              // 2. ZUM EVENT SCREEN WECHSELN
+                              navigatetoCreateEventScreen(context);
                             },
-
                           ),
                         ],
                       ),
@@ -432,6 +422,33 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
         pageBuilder: (context, animation, secondaryAnimation) =>
             BoxDetailScreen(
               box: SharedPreferencesRepository.instance.currentBox,
+            ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      // MaterialPageRoute(
+      //   builder: (context) => CreateBoxScreen(),
+      // ),
+    );
+  }
+
+  void navigatetoCreateEventScreen(BuildContext context) {
+final creationProvider = Provider.of<ItemCreationProvider>(
+    context, 
+    listen: false,
+  );
+
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            CreateEventScreen(
+              fromCreateItemScreen: true,
+              onEventCreatedForTempItem: (Event event) { 
+                creationProvider.addEvent(event);
+              },
             ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);

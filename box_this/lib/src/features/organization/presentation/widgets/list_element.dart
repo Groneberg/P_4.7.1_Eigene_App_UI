@@ -116,7 +116,7 @@ class _ListElementState extends State<ListElement> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    navigateToBoxDetailScreen(context);
+                    navigateToDetailScreen(context);
                   },
                   child: Text(
                     widget.element.name,
@@ -199,8 +199,13 @@ class _ListElementState extends State<ListElement> {
     );
   }
 
-  void navigateToBoxDetailScreen(BuildContext context) {
-    SharedPreferencesRepository.instance.currentBox = widget.element;
+  void navigateToDetailScreen(BuildContext context) {
+    String typ = getElementTyp();
+
+    if (typ == "box") {
+      SharedPreferencesRepository.instance.currentBox = widget.element;
+    }
+
     var detailScreen;
     switch (getElementTyp()) {
       case "box":

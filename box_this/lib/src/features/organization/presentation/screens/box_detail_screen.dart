@@ -4,6 +4,7 @@ import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
+import 'package:box_this/src/data/provider/item_creation_provider.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_event_screen.dart';
@@ -134,7 +135,12 @@ class BoxDetailScreen extends StatelessWidget {
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) =>
-            CreateItemScreen(),
+            ChangeNotifierProvider(
+            create: (context) => ItemCreationProvider(),
+            child: CreateItemScreen(),
+          ),
+
+
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

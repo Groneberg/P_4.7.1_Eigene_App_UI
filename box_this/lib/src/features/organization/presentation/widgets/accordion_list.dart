@@ -51,13 +51,15 @@ class _AccordionListState extends State<AccordionList> {
       case "Event":
         databaseRepository.deleteEvent(name);
         // databaseRepository.currentBox.events.remove(name);
+        break;
       case "EventInItem":
-        databaseRepository.deleteEventInItem(widget.itemName, name);
+        databaseRepository.deleteEventInItem(name ,widget.itemName);
         break;
       default:
         break;
     }
     // databaseRepository.updateBox(Box(name: databaseRepository.currentBox.name, description: databaseRepository.currentBox.description, ), );
+    databaseRepository.updateBox(Box(name: databaseRepository.currentBox.name, description: databaseRepository.currentBox.description, ), );
   }
 
   @override

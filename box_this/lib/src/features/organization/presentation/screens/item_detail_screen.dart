@@ -3,13 +3,10 @@ import 'dart:developer';
 import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
-import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_event_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/edit_box_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_item_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/accordion_list.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_information.dart';
@@ -342,6 +339,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               fromBoxDetailScreen: false,
               fromItemDetailScreen: true,
               fromCreateItemScreen: false,
+              
             ),
       ),
       // MaterialPageRoute(
