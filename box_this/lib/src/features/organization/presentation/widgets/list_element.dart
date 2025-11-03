@@ -13,9 +13,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ListElement extends StatefulWidget {
   final dynamic element;
   final VoidCallback onDelete;
-  final String itemName;
+  final String itemId;
 
-  const ListElement({super.key, required this.element, required this.onDelete, this.itemName = ""});
+  const ListElement({
+    super.key,
+    required this.element,
+    required this.onDelete,
+    this.itemId = "",
+  });
 
   @override
   State<ListElement> createState() => _ListElementState();
@@ -200,15 +205,10 @@ class _ListElementState extends State<ListElement> {
   }
 
   void navigateToDetailScreen(BuildContext context) {
-    String typ = getElementTyp();
-
-    if (typ == "box") {
-      SharedPreferencesRepository.instance.currentBox = widget.element;
-    }
-
     var detailScreen;
     switch (getElementTyp()) {
       case "box":
+        SharedPreferencesRepository.instance.currentBox = widget.element;
         detailScreen = BoxDetailScreen(box: widget.element);
         break;
       case "item":
@@ -221,18 +221,20 @@ class _ListElementState extends State<ListElement> {
         detailScreen = null;
     }
 
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) => detailScreen,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-      ),
-      // // TODO navigation anpassen für Item und Event
-      // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
-    );
+    if (detailScreen != null) {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 300),
+          pageBuilder: (context, animation, secondaryAnimation) => detailScreen,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+        // // TODO navigation anpassen für Item und Event
+        // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
+      );
+    }
   }
 
   void navigateToEditScreen(BuildContext context) {
@@ -245,24 +247,28 @@ class _ListElementState extends State<ListElement> {
         editScreen = EditItemScreen(item: widget.element);
         break;
       case "event":
-        editScreen = EditEventScreen(event: widget.element,
-        itemName: widget.itemName.isNotEmpty ? widget.itemName : null,
+        editScreen = EditEventScreen(
+          event: widget.element,
+          itemId: widget.itemId.isNotEmpty ? widget.itemId : null,
         );
         break;
       default:
         editScreen = null;
     }
 
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) => editScreen,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-      ),
-      // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
-    );
+    if (editScreen != null) {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 300),
+          pageBuilder: (context, animation, secondaryAnimation) => editScreen,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+        // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
+      );
+    }
+
   }
 }

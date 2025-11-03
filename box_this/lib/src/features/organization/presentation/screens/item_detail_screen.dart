@@ -42,6 +42,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     //   box.name,
     // )!;
 
+    final String id = widget.item.id;
     final String name = widget.item.name;
 
     final String description = widget.item.description;
@@ -49,11 +50,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     log("Current Box: ${databaseRepository.currentBox.name}");
 
     TextEditingController _amountController = TextEditingController(
-      text: databaseRepository.currentBox.items[name]!.amount.toString(),
+      text: databaseRepository.currentBox.items[id]!.amount.toString(),
       // text: widget.item.amount.toString(),
     );
     TextEditingController _minAmountController = TextEditingController(
-      text: databaseRepository.currentBox.items[name]!.minAmount.toString(),
+      text: databaseRepository.currentBox.items[id]!.minAmount.toString(),
       // text: widget.item.minAmount.toString(),
     );
 
@@ -244,7 +245,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     typ: "EventInItem",
                     box: databaseRepository.currentBox,
                     inBox: false,
-                    itemName: widget.item.name,
+                    itemId: widget.item.id,
                   ),
                 ],
               ),

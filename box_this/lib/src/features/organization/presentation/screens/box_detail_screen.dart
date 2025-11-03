@@ -26,22 +26,11 @@ class BoxDetailScreen extends StatelessWidget {
     SharedPreferencesRepository databaseRepository =
         Provider.of<SharedPreferencesRepository>(context);
 
-    Box? foundBox = databaseRepository.mainBox.findBoxByName(box.name);
-    if (foundBox == null) {
-      return SafeArea(
-        top: true,
-        bottom: true,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Center(child: CircularProgressIndicator()),
-        ),
-      );
-    }
-
-
+    databaseRepository.currentBox = box;
     final String title = databaseRepository.currentBox.name;
     final String description = databaseRepository.currentBox.description;
-    log("Current Box: ${databaseRepository.currentBox.name}");
+    log("Current Box Name: ${databaseRepository.currentBox.name}");
+    log("Current Box: ${databaseRepository.currentBox}");
 
     return SafeArea(
       top: true,
@@ -72,7 +61,7 @@ class BoxDetailScreen extends StatelessWidget {
                     svgIconPath: "assets/svg/icons/box_icon.svg",
                     onPressed: () {
                       databaseRepository.currentBox = databaseRepository.mainBox
-                          .findBoxByName(box.name)!;
+                          .findBoxById(box.id)!;
                       log("Current Box: ${databaseRepository.currentBox.name}");
                       navigatetoCreateBoxScreen(context);
                     },
@@ -99,7 +88,7 @@ class BoxDetailScreen extends StatelessWidget {
                     svgIconPath: "assets/svg/icons/delete_icon.svg",
                     onPressed: () {
                       Navigator.pop(context);
-                      databaseRepository.deleteBox(box.name);
+                      databaseRepository.deleteBox(box.id);
                     },
                   ),
                 ],

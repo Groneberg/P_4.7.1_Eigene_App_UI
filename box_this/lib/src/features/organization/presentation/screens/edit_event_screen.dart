@@ -3,14 +3,10 @@ import 'dart:developer';
 import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
-import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
-import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/themed_time_picker.dart';
 
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 
@@ -20,9 +16,9 @@ import 'package:provider/provider.dart';
 
 class EditEventScreen extends StatefulWidget {
   final Event? event;
-  final String? itemName;
+  final String? itemId;
 
-  EditEventScreen({super.key, this.event, this.itemName});
+  EditEventScreen({super.key, this.event, this.itemId});
 
   @override
   State<EditEventScreen> createState() => _CreateEventScreenState();
@@ -306,11 +302,11 @@ class _CreateEventScreenState extends State<EditEventScreen> {
   }
 
   void updateEvent(BuildContext context) {
+    final databaseRepository = Provider.of<SharedPreferencesRepository>(
+      context,
+      listen: false,
+    );
     if (_formKey.currentState!.validate()) {
-      final databaseRepository = Provider.of<SharedPreferencesRepository>(
-        context,
-        listen: false,
-      );
 
       final Event updatedEvent = Event(
         name: _nameController.text,
@@ -319,11 +315,9 @@ class _CreateEventScreenState extends State<EditEventScreen> {
         description: _descriptionController.text,
       );
 
-      if (widget.itemName != null) {
-        log("Updating Event in Item: ${widget.itemName}");
-        databaseRepository.updateEventInItem(updatedEvent, widget.itemName!);
+      if (widget.itemId != null) {
+        databaseRepository.updateEventInItem(updatedEvent, widget.itemId!);
       } else {
-        log("Updating Event in Box: ${updatedEvent.name}");
         databaseRepository.updateEvent(updatedEvent);
       }
 

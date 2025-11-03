@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/list_element.dart';
@@ -9,9 +11,15 @@ class AccordionList extends StatefulWidget {
   final String typ;
   final Box box;
   final bool inBox;
-  final String itemName;
+  final String itemId;
 
-  const AccordionList({super.key, required this.typ, required this.box , this.inBox = false, this.itemName = ""});
+  const AccordionList({
+    super.key,
+    required this.typ,
+    required this.box,
+    this.inBox = false,
+    this.itemId = "",
+  });
 
   @override
   State<AccordionList> createState() => _AccordionListState();
@@ -29,37 +37,45 @@ class _AccordionListState extends State<AccordionList> {
       case "Event":
         return widget.box.events;
       case "EventInItem":
-        return widget.box.items[widget.itemName]?.events ?? {};
+        return widget.box.items[widget.itemId]?.events ?? {};
       default:
         return {};
     }
   }
 
-  void deleteElementByTyp(String typ, String name) {
+  void deleteElementByTyp(String typ, String elementID) {
     SharedPreferencesRepository databaseRepository =
         Provider.of<SharedPreferencesRepository>(context, listen: false);
 
     switch (typ) {
       case "Box":
-        databaseRepository.deleteBox( name);
-        // databaseRepository.currentBox.boxes.remove(name);
+        databaseRepository.deleteBox(elementID);
+        databaseRepository.updateBox(databaseRepository.currentBox);
         break;
       case "Item":
-        databaseRepository.deleteItem(name);
-        // databaseRepository.currentBox.items.remove(name);
+        databaseRepository.deleteItem(elementID);
+        databaseRepository.updateBox(databaseRepository.currentBox);
         break;
       case "Event":
-        databaseRepository.deleteEvent(name);
-        // databaseRepository.currentBox.events.remove(name);
+        databaseRepository.deleteEvent(elementID);
+        databaseRepository.updateBox(databaseRepository.currentBox);
         break;
       case "EventInItem":
-        databaseRepository.deleteEventInItem(name ,widget.itemName);
+        final parentItem = databaseRepository.currentBox.items[widget.itemId];
+
+        if (parentItem != null) {
+          parentItem.events.remove(elementID);
+          databaseRepository.updateItem(parentItem);
+        } else {
+          log(
+            'Parent Item with ID ${widget.itemId} not found. Cannot delete event.',
+          );
+        }
         break;
       default:
+        log("Unknown element type for deletion: $typ");
         break;
     }
-    // databaseRepository.updateBox(Box(name: databaseRepository.currentBox.name, description: databaseRepository.currentBox.description, ), );
-    databaseRepository.updateBox(Box(name: databaseRepository.currentBox.name, description: databaseRepository.currentBox.description, ), );
   }
 
   @override
@@ -70,7 +86,7 @@ class _AccordionListState extends State<AccordionList> {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      
+
       children: [
         GestureDetector(
           onTap: () {
@@ -117,7 +133,7 @@ class _AccordionListState extends State<AccordionList> {
               var element = elements[key];
               return ListElement(
                 element: element,
-                itemName: (widget.typ == "EventInItem") ? widget.itemName : "",
+                itemId: (widget.typ == "EventInItem") ? widget.itemId : "",
                 onDelete: () {
                   deleteElementByTyp(widget.typ, key);
                 },

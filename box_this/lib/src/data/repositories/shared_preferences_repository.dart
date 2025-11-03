@@ -31,7 +31,7 @@ class SharedPreferencesRepository extends ChangeNotifier
     currentBox = mainBox;
   }
 
-  Future<void> _persistBoxes(jsonString) async {
+  Future<void> _persistBoxes(String jsonString) async {
     try {
       _prefs.setString("mainBox", jsonString);
     } catch (e) {
@@ -40,95 +40,99 @@ class SharedPreferencesRepository extends ChangeNotifier
   }
 
   String encodeMapToJson(Box box) {
-    return jsonEncode(box.toJson());
+    String jsonString = jsonEncode(box.toJson());
+    log("This box will be encoded to JSON: $jsonString");
+    return jsonString;
   }
 
   @override
   Future<void> createBox(Box box) async {
-    currentBox.boxes[box.name] = box;
-    // convert Box to JSON-String
-    String jsonString = encodeMapToJson(mainBox);
-    log("This box will be saved as JSON: $jsonString");
+    // adds a box to the current box
+    currentBox.addBox(box);
     notifyListeners();
-    await _persistBoxes(jsonString);
+    await _persistBoxes(encodeMapToJson(mainBox));
   }
 
   @override
   Future<void> createEvent(Event event) async {
-    currentBox.events[event.name] = event;
-    String jsonString = encodeMapToJson(mainBox);
-    log("This event will be saved as JSON: $jsonString");
+    currentBox.addEvent(event);
     notifyListeners();
-    await _persistBoxes(jsonString);
+    await _persistBoxes(encodeMapToJson(mainBox));
   }
 
-  Future<void> createEventInItem(Event event, Item item) async {
-    item.events[event.name] = event;
-    currentBox.items[item.name] = item;
-    String jsonString = encodeMapToJson(mainBox);
-    log("This event in item will be saved as JSON: $jsonString");
-    notifyListeners();
-    await _persistBoxes(jsonString);
+  Future<void> createEventInItem(Event event, String itemId) async {
+    Item? targetItem = mainBox.findItemById(itemId);
+
+    if (targetItem != null) {
+      targetItem.addEvent(event);
+      notifyListeners();
+      await _persistBoxes(encodeMapToJson(mainBox));
+    } else {
+      log("Error: Item with ID $itemId could not be found in the box tree.");
+    }
   }
 
   @override
   Future<void> createItem(Item item) async {
-    currentBox.items[item.name] = item;
-    String jsonString = encodeMapToJson(mainBox);
-    log("This item will be saved as JSON: $jsonString");
+    currentBox.addItem(item);
     notifyListeners();
-    await _persistBoxes(jsonString);
+    await _persistBoxes(encodeMapToJson(mainBox));
   }
 
   @override
-  Future<void> deleteBox(String name) async {
-    Box? parentBox = mainBox.getParentBoxChildBoxName(currentBox.name);
+  Future<void> deleteBox(String id) async {
+    Box? parentBox = mainBox.getParentBox(id);
 
     if (parentBox != null) {
-      parentBox.boxes.remove(name);
-      currentBox = parentBox;
-    } else if (currentBox.name == mainBox.name) {
-      mainBox.boxes.remove(name);
-      currentBox = mainBox;
+      parentBox.boxes.remove(id);
+
+      if (currentBox.id == id) {
+        currentBox = parentBox;
+      }
     } else {
-      log("Parent box not found for current box: ${currentBox.name}");
+      log("Could not find/delete box $id, no parent box found.");
+      return;
     }
-    String jsonString = encodeMapToJson(mainBox);
-    log("This box will be saved as JSON: $jsonString");
+
     notifyListeners();
-    await _persistBoxes(jsonString);
+    await _persistBoxes(encodeMapToJson(mainBox));
   }
 
   @override
-  Future<void> deleteEvent(String name) async {
-    currentBox.events.remove(name);
-    String jsonString = encodeMapToJson(mainBox);
-    log("This event will be saved as JSON: $jsonString");
+  Future<void> deleteEvent(String id) async {
+    Box? parentBox = mainBox.getParentBox(id);
+    if (parentBox != null) {
+      parentBox.events.remove(id);
+    } else {
+      log("Could not find/delete event $id. No parent box found.");
+      return;
+    }
     notifyListeners();
-    await _persistBoxes(jsonString);
+    await _persistBoxes(encodeMapToJson(mainBox));
   }
 
-  Future<void> deleteEventInItem(String eventName, String itemName) async {
-    Item? item = currentBox.items[itemName];
-
+  Future<void> deleteEventInItem(String eventID, String itemID) async {
+    Item? item = currentBox.items[itemID];
     if (item != null) {
-      item.events.remove(eventName);
-      String jsonString = encodeMapToJson(mainBox);
-      log("Event '$eventName' in Item '$itemName' wird gelöscht.");
+      item.events.remove(eventID);
       notifyListeners();
-      await _persistBoxes(jsonString);
+      await _persistBoxes(encodeMapToJson(mainBox));
     } else {
-      log("Item not found: $itemName. Event could not be deleted.");
+      log("Item not found: $itemID. Event could not be deleted.");
     }
   }
 
   @override
-  Future<void> deleteItem(String name) async {
-    currentBox.items.remove(name);
-    String jsonString = encodeMapToJson(mainBox);
-    log("This item will be saved as JSON: $jsonString");
+  Future<void> deleteItem(String id) async {
+    Box? parentBox = mainBox.getParentBox(id);
+    if (parentBox != null) {
+      parentBox.items.remove(id);
+    } else {
+      log("Could not find/delete item $id. No parent box found.");
+      return;
+    }
     notifyListeners();
-    await _persistBoxes(jsonString);
+    await _persistBoxes(encodeMapToJson(mainBox));
   }
 
   @override
@@ -161,23 +165,23 @@ class SharedPreferencesRepository extends ChangeNotifier
   }
 
   @override
-  Future<Box?> readBox(String name) async {
-    return currentBox.boxes[name];
+  Future<Box?> readBox(String id) async {
+    return mainBox.findBoxById(id);
   }
 
   @override
-  Future<Event?> readEvent(String name) async {
-    return currentBox.events[name];
+  Future<Event?> readEvent(String id) async {
+    return currentBox.events[id];
   }
 
   @override
-  Future<Item?> readItem(String name) async {
-    return currentBox.items[name];
+  Future<Item?> readItem(String id) async {
+    return currentBox.items[id];
   }
 
   @override
   Future<void> updateBox(Box box) async {
-    currentBox.boxes[box.name] = box;
+    currentBox.boxes[box.id] = box;
     String jsonString = encodeMapToJson(mainBox);
     log("This box will be saved as JSON: $jsonString");
     notifyListeners();
@@ -186,7 +190,7 @@ class SharedPreferencesRepository extends ChangeNotifier
 
   @override
   Future<void> updateEvent(Event event) async {
-    currentBox.events[event.name] = event;
+    currentBox.events[event.id] = event;
     String jsonString = encodeMapToJson(mainBox);
     log("This event will be saved as JSON: $jsonString");
     notifyListeners();
@@ -195,33 +199,33 @@ class SharedPreferencesRepository extends ChangeNotifier
 
   @override
   Future<void> updateItem(Item item) async {
-    currentBox.items[item.name] = item;
+    currentBox.items[item.id] = item;
     String jsonString = encodeMapToJson(mainBox);
     log("This item will be saved as JSON: $jsonString");
     notifyListeners();
     await _persistBoxes(jsonString);
   }
 
-  Future<void> updateEventInItem(Event event, String itemName) async {
-    Item? item = currentBox.items[itemName];
+  Future<void> updateEventInItem(Event event, String itemID) async {
+    Item? item = currentBox.items[itemID];
     if (item != null) {
-      item.events[event.name] = event;
+      item.events[event.id] = event;
 
       String jsonString = encodeMapToJson(mainBox);
       log("Event in Item updated: $jsonString");
       notifyListeners();
       await _persistBoxes(jsonString);
     } else {
-      log("Item not found: $itemName. Event could not be updated.");
+      log("Item not found: $itemID. Event could not be updated.");
     }
   }
 
   Future<void> updateItemAmount(
-    String itemName,
+    String itemID,
     int newAmount,
     int newMinAmount,
   ) async {
-    Item? item = currentBox.items[itemName];
+    Item? item = currentBox.items[itemID];
     if (item != null) {
       item.amount = newAmount;
       item.minAmount = newMinAmount;
@@ -233,11 +237,4 @@ class SharedPreferencesRepository extends ChangeNotifier
     }
   }
 
-  // Future<void> _persistTasks() async {
-  //   try {
-  //     await _prefs.setStringList('tasks', _tasks);
-  //   } catch (e) {
-  //     log("Fehler beim Speichern der Task-Liste: $e");
-  //   }
-  // }
 }

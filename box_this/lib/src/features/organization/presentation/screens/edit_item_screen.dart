@@ -55,15 +55,15 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   void updateItem(BuildContext context) {
+    final databaseRepository = Provider.of<SharedPreferencesRepository>(
+      context,
+      listen: false,
+    );
     if (_formKey.currentState!.validate()) {
-      final databaseRepository = Provider.of<SharedPreferencesRepository>(
-        context,
-        listen: false,
-      );
 
-      log("Creating Item: ${_itemNameController.text}");
       databaseRepository.updateItem(
         Item(
+          id: widget.item!.id,
           name: _itemNameController.text,
           description: _descriptionController.text,
           amount: _amountController.text.isEmpty
@@ -77,7 +77,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
       );
       navigatetoBoxDetailScreen(context);
     } else {
-      // TODO bessere Fehlerbehandlung
       log("Form is not valid");
     }
   }

@@ -5,7 +5,6 @@ import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
-import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
 
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
@@ -192,8 +191,6 @@ class _EditBoxScreenState extends State<EditBoxScreen> {
       context,
       listen: false,
     );
-    log("mainBox before creating new box: ${databaseRepository.mainBox}");
-
     Box boxToUpdate = widget.box!;
 
     boxToUpdate.name = _nameController.text;

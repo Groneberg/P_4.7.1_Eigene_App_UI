@@ -1,23 +1,34 @@
+import 'package:uuid/uuid.dart';
+
 /// Represents an event with a name, time, date, and description.
 class Event {
-  String? id;
+  final String id;
   String? parentId;
   String name;
   String time;
   String date;
   String description;
 
-  Event({id = "", parentId = "" ,required this.name, required this.time, required this.date, required this.description});
+  Event({
+    String? id,
+    parentId = "",
+    required this.name,
+    required this.time,
+    required this.date,
+    required this.description,
+  }) : this.id = id ?? Uuid().v4();
 
   /// Factory constructor to create an Event instance from a JSON map.
   factory Event.fromJson(Map<String, dynamic> json) {
+    String? idFromJason = json['id'] as String?;
+
     return Event(
+      id: idFromJason,
       name: json['name'] as String,
       time: json['time'] as String,
       date: json['date'] as String,
       description: json['description'] as String,
-      id: json['id'] ?? "",
-      parentId: json['parentId'] ?? "",
+      parentId: json['parentId'] as String?,
     );
   }
 

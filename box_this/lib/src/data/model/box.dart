@@ -1,20 +1,29 @@
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
+import 'package:uuid/uuid.dart';
 
 /// Represents a box that can contain other boxes, items, and events.
 class Box {
-  String? id;
+  final String id;
   String? parentId;
   String name;
   String description;
+
   Map<String, Box> boxes = {};
   Map<String, Item> items = {};
   Map<String, Event> events = {};
 
-  Box({id = "", parentId = "", required this.name, required this.description});
+  Box({
+    String? id,
+    parentId = "",
+    required this.name,
+    required this.description,
+  }) : this.id = id ?? Uuid().v4();
 
   /// Factory constructor to create a Box instance from a JSON map.
   factory Box.fromJson(Map<String, dynamic> json) {
+    String? idFromJason = json['id'] as String?;
+
     var boxesMap = json['boxes'] as Map<String, dynamic>? ?? {};
     Map<String, Box> reconstructedBoxes = boxesMap.map(
       (key, value) =>
@@ -34,7 +43,7 @@ class Box {
     );
 
     return Box(
-        id: json['id'] as String?,
+        id: idFromJason,
         parentId: json['parentId'] as String?,
         name: json['name'] as String,
         description: json['description'] as String,
@@ -47,27 +56,30 @@ class Box {
   /// Adds a sub-box to the current box.
   /// This allows for creating a hierarchy of boxes.
   void addBox(Box box) {
-    this.boxes[box.name] = box;
+    this.boxes[box.id] = box;
   }
 
   /// Adds an item to the current box.
   /// This allows for associating items with this specific box.
   void addItem(Item item) {
-    this.items[item.name] = item;
+    this.items[item.id] = item;
   }
 
-  /// Recursively searches for a box by its name within the current box and its sub-boxes.
+  /// Recursively searches for a box by its id within the current box and its sub-boxes.
   /// Returns the Box if found, or null if not found.
-  Box? findBoxByName(String boxName) {
+  Box? findBoxById(String boxId) {
     // Check if the current box matches the name
-    if (this.name == boxName) {
+    if (this.id == boxId) {
       return this;
     }
+    // Check if the current box contains the box
+    if (this.boxes.containsKey(boxId)) {
+      return this.boxes[boxId];
+    }
+
     // Recursively search in child boxes
-    for (var boxEntrie in this.boxes.entries) {
-      Box childBox = boxEntrie.value;
-      var found = childBox.findBoxByName(boxName);
-      // If a matching box is found in the child boxes, return it
+    for (var childBox in this.boxes.values) {
+      var found = childBox.findBoxById(boxId);
       if (found != null) {
         return found;
       }
@@ -76,12 +88,32 @@ class Box {
     return null;
   }
 
-  Box? getParentBoxChildBoxName(String boxName) {
-    for (var boxEntry in boxes.entries) {
-      if (boxEntry.value.name == boxName) {
-        return this;
+  Item? findItemById(String itemId) {
+    // Check if the current box contains the item
+    if (this.items.containsKey(itemId)) {
+      return this.items[itemId];
+    }
+    
+    // Recursively search in child boxes
+    for (var childBox in this.boxes.values) {
+      var found = childBox.findItemById(itemId);
+      if (found != null) {
+        return found;
       }
-      var parent = boxEntry.value.getParentBoxChildBoxName(boxName);
+    }
+    return null;
+  }
+
+  /// Finds the parent box of a given child ID.
+  Box? getParentBox(String childId) {
+    if (this.boxes.containsKey(childId) ||
+        this.items.containsKey(childId) ||
+        this.events.containsKey(childId)) {
+      return this;
+    }
+
+    for (var childBox in this.boxes.values) {
+      var parent = childBox.getParentBox(childId);
       if (parent != null) {
         return parent;
       }
@@ -89,39 +121,20 @@ class Box {
     return null;
   }
 
-  Event? findEventByName(String eventName) {
+  Event? findEventById(String eventId) {
     // Check if the current box contains the event
-    if (this.events.containsKey(eventName)) {
-      return this.events[eventName];
+    if (this.events.containsKey(eventId)) {
+      return this.events[eventId];
     }
     // Recursively search in child boxes
-    for (var boxEntrie in this.boxes.entries) {
-      Box childBox = boxEntrie.value;
-      var found = childBox.findEventByName(eventName);
-      // If a matching event is found in the child boxes, return it
+    for (var childBox in this.boxes.values) {
+      var found = childBox.findEventById(eventId);
       if (found != null) {
         return found;
       }
     }
+   
     // If no matching event is found, return null
-    return null;
-  }
-
-  Item? findItemByName(String itemName) {
-    // Check if the current box contains the item
-    if (this.items.containsKey(itemName)) {
-      return this.items[itemName];
-    }
-    // Recursively search in child boxes
-    for (var boxEntrie in this.boxes.entries) {
-      Box childBox = boxEntrie.value;
-      var found = childBox.findItemByName(itemName);
-      // If a matching item is found in the child boxes, return it
-      if (found != null) {
-        return found;
-      }
-    }
-    // If no matching item is found, return null
     return null;
   }
 
@@ -138,7 +151,7 @@ class Box {
   /// Adds an event to the current box.
   /// This allows for associating events with this specific box.
   void addEvent(Event event) {
-    this.events[name] = event;
+    this.events[event.id] = event;
   }
 
   Map<String, dynamic> toJson() {
@@ -147,7 +160,7 @@ class Box {
       'description': description,
     };
 
-    if (id != null && id!.isNotEmpty) {
+    if (id.isNotEmpty) {
       jsonString['id'] = id;
     }
 
@@ -179,6 +192,6 @@ class Box {
   // TODO bessere umsetzung der Informationen
   @override
   String toString() {
-    return 'Box(id: ${id ?? ""}, parentId: ${parentId ?? ""} name: $name, description: $description, boxes: ${boxes.keys.toList()}, items: ${items.keys.toList()}, events: ${events.keys.toList()})';
+    return 'Box(id: $id, parentId: ${parentId ?? ""}, name: $name, description: $description, boxes: ${boxes.keys.toList()}, items: ${items.keys.toList()}, events: ${events.keys.toList()})';
   }
 }

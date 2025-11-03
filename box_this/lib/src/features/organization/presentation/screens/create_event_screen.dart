@@ -3,17 +3,14 @@ import 'dart:developer';
 import 'package:box_this/src/common/widgets/custom_bottem_nav_bar.dart';
 import 'package:box_this/src/common/widgets/custom_search_bar.dart';
 import 'package:box_this/src/common/widgets/title_app_bar.dart';
-import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
-import 'package:box_this/src/data/provider/item_creation_provider.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/item_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
-import 'package:box_this/src/features/organization/presentation/widgets/themed_time_picker.dart';
 
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 

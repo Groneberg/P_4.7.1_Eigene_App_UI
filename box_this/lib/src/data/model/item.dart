@@ -1,8 +1,9 @@
 import 'package:box_this/src/data/model/event.dart';
+import 'package:uuid/uuid.dart';
 
 /// Represents an item with a name, description, amount, and associated events.
 class Item {
-  String? id;
+  final String id;
   String? parentId;
 
   String name;
@@ -10,28 +11,32 @@ class Item {
   String location;
   int amount = 0;
   int minAmount = 0;
+
   Map<String, Event> events = {};
 
   Item({
-    id = "",
+    String? id,
     parentId = "",
     required this.name,
     required this.description,
     required this.location,
     this.amount = 0,
     this.minAmount = 0,
-  });
+  }) : this.id = id ?? Uuid().v4();
 
   /// Factory constructor to create an Item instance from a JSON map.
   factory Item.fromJson(Map<String, dynamic> json) {
+
     var eventsMap = json['events'] as Map<String, dynamic>? ?? {};
     Map<String, Event> reconstructedEvents = eventsMap.map(
       (key, value) =>
           MapEntry(key, Event.fromJson(value as Map<String, dynamic>)),
     );
 
+    String? idFromJason = json['id'] as String?;
+
     return Item(
-      id: json['id'] as String?,
+      id: idFromJason,
       parentId: json['parentId'] as String?,
       name: json['name'] as String,
       description: json['description'] as String,
@@ -44,7 +49,7 @@ class Item {
   /// Adds an event to the current box.
   /// This allows for associating events with this specific box.
   void addEvent(Event event) {
-    this.events[event.name] = event;
+    this.events[event.id] = event;
   }
 
   Map<String, dynamic> toJson() {
@@ -53,13 +58,14 @@ class Item {
       'description': description,
     };
 
-    if (id != null && id!.isNotEmpty) {
+    if (id.isNotEmpty) {
       jsonString['id'] = id;
     }
+
     if (parentId != null && parentId!.isNotEmpty) {
       jsonString['parentId'] = parentId;
     }
-    if (location != null && location!.isNotEmpty) {
+    if (location.isNotEmpty) {
       jsonString['location'] = location;
     }
     if (amount != 0) {
