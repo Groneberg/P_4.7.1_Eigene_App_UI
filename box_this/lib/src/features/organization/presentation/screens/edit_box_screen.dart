@@ -53,7 +53,7 @@ class _EditBoxScreenState extends State<EditBoxScreen> {
       bottom: true,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: TiTleAppBar(
+        appBar: TitleAppBar(
           title: "Edit Box",
           setBackIcon: false,
           icon: "box_icon",

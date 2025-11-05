@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 
-class TiTleAppBar extends StatelessWidget implements PreferredSizeWidget {
+class TitleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String icon;
   final bool setBackIcon;
   // Icom icon;
 
-  const TiTleAppBar({
+  const TitleAppBar({
     super.key,
     this.title = "Default Title",
     // this.setBackIcon = false,

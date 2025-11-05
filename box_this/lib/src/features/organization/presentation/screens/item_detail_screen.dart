@@ -61,7 +61,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           bottom: true,
           child: Scaffold(
             backgroundColor: Theme.of(context).colorScheme.primary,
-            appBar: TiTleAppBar(
+            appBar: TitleAppBar(
               title: name,
               setBackIcon: false,
               icon: "item_icon",

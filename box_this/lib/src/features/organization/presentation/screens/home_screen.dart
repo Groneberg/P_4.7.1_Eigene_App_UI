@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
+        appBar: TitleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
         body: Column(
           children: [
             CustomSearchBar(),

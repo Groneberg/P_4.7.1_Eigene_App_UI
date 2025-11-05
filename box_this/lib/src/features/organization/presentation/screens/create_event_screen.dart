@@ -110,7 +110,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       bottom: true,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: TiTleAppBar(
+        appBar: TitleAppBar(
           title: "Create Event",
           setBackIcon: false,
           icon: "event_icon",

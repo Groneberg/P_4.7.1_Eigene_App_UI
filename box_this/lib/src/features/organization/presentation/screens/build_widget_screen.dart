@@ -22,7 +22,7 @@ class _BuildWidgetScreenState extends State<BuildWidgetScreen> {
       bottom: true,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: TiTleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
+        appBar: TitleAppBar(title: "Home", setBackIcon: false, icon: "home_icon"),
         body: Column(
           children: [
             // ThemedTimePicker()

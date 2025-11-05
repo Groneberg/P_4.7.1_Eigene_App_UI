@@ -91,7 +91,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
       bottom: true,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: TiTleAppBar(
+        appBar: TitleAppBar(
           title: "Create Item",
           setBackIcon: false,
           icon: "item_icon",

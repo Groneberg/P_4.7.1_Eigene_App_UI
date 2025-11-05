@@ -46,7 +46,7 @@ class _CreateBoxScreenState extends State<CreateBoxScreen> {
 
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: TiTleAppBar(
+        appBar: TitleAppBar(
           title: "Create Box",
           setBackIcon: false,
           icon: "box_icon",

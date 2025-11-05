@@ -90,7 +90,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       bottom: true,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: TiTleAppBar(
+        appBar: TitleAppBar(
           title: "Edit Item",
           setBackIcon: false,
           icon: "item_icon",

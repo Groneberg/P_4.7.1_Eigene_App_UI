@@ -28,28 +28,18 @@ class BoxDetailScreen extends StatefulWidget {
 class _BoxDetailScreenState extends State<BoxDetailScreen> {
   @override
   Widget build(BuildContext context) {
-
-    testMethode();
-
     return Consumer<SharedPreferencesRepository>(
       builder: (context, databaseRepository, child) {
 
-        // KORREKTUR: Holen Sie die FRISCHESTE Version der Box aus dem Repository.
-        // Wir verwenden die ID der 'box', die wir erhalten haben, um die aktuelle Version zu finden.
         final Box? currentDisplayBox = databaseRepository.mainBox.findBoxById(widget.box.id);
 
-        // KORREKTUR (SICHERHEITSPRÜFUNG): Wenn die Box (z.B. durch Löschen) nicht mehr existiert,
-        // sicher zum vorherigen Screen zurückkehren, um einen Absturz zu verhindern.
         if (currentDisplayBox == null) {
-          // Wir warten, bis der Build-Frame abgeschlossen ist, um sicher zu 'pop'-en.
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pop(context);
           });
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
 
-        // KORREKTUR: Setzen Sie 'currentBox' hier, damit Aktionen (wie "Create Item")
-        // den richtigen Kontext haben.
         databaseRepository.currentBox = currentDisplayBox;
         
         final String title = currentDisplayBox.name;
@@ -60,7 +50,7 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
           bottom: true,
           child: Scaffold(
             backgroundColor: Theme.of(context).colorScheme.primary,
-            appBar: TiTleAppBar(
+            appBar: TitleAppBar(
               title: title,
               setBackIcon: false,
               icon: "box_icon",
@@ -176,7 +166,6 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
           return FadeTransition(opacity: animation, child: child);
         },
       ),
-      // // TODO navigation anpassen für Item und Event
       // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
     );
   }
@@ -193,12 +182,5 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
       //   builder: (context) => CreateEventScreen(),
       // ),
     );
-  }
-
-  void testMethode() async {
-    SharedPreferencesRepository databaseRepository =
-        SharedPreferencesRepository.instance;
-    Box search = await databaseRepository.searchAllElements("e");
-    log(search.toString());
   }
 }
