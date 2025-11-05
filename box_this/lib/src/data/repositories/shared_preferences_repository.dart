@@ -28,6 +28,7 @@ class SharedPreferencesRepository extends ChangeNotifier
   Future<void> initializePersistence() async {
     _prefs = await SharedPreferences.getInstance();
     mainBox = await readMainBoxStructure();
+    log(encodeMapToJson(mainBox));
     currentBox = mainBox;
   }
 
@@ -124,15 +125,78 @@ class SharedPreferencesRepository extends ChangeNotifier
 
   @override
   Future<void> deleteItem(String id) async {
-    Box? parentBox = mainBox.getParentBox(id);
+    Item? itemtoDelete = mainBox.findItemById(id);
+
+    if (itemtoDelete == null) {
+      log("Item $id not found, cannot delete.");
+      return;
+    }
+    if (itemtoDelete.parentId == null || itemtoDelete.parentId!.isEmpty) {
+      log("Item $id has no parentId, cannot delete.");
+      return;
+    }
+    Box? parentBox = mainBox.findBoxById(itemtoDelete.parentId!);
     if (parentBox != null) {
       parentBox.items.remove(id);
     } else {
-      log("Could not find/delete item $id. No parent box found.");
+      log(
+        "Could not find/delete item $id. Parent box ${itemtoDelete.parentId} not found.",
+      );
       return;
     }
+
     notifyListeners();
     await _persistBoxes(encodeMapToJson(mainBox));
+  }
+
+  Future<Box> searchAllElements(String query) async {
+    Box searchBox = Box(name: "searchResults", description: "Search Results");
+    String queryLower = query.toLowerCase();
+
+    final Set<String> foundIds = {};
+
+    void searchBoxRecursive(Box box) {
+      // Search boxes
+      box.boxes.forEach((id, childBox) {
+        if (childBox.name.toLowerCase().contains(queryLower)) {
+          if (foundIds.add(id)) {
+            searchBox.addBox(childBox);
+          }
+        }
+        searchBoxRecursive(childBox);
+      });
+
+      // Search items
+      box.items.forEach((id, item) {
+        if (item.name.toLowerCase().contains(queryLower)) {
+          if (foundIds.add(id)) {
+            searchBox.addItem(item);
+          }
+        }
+        // Search events in items
+        item.events.forEach((eventId, event) {
+          if (event.name.toLowerCase().contains(queryLower)) {
+            if (foundIds.add(eventId)) {
+              searchBox.addEvent(event);
+            }
+          }
+        });
+      });
+
+      // Search events
+      box.events.forEach((id, event) {
+        if (event.name.toLowerCase().contains(queryLower)) {
+          if (foundIds.add(id)) {
+            searchBox.addEvent(event);
+          }
+        }
+      });
+    }
+
+    // Start recursive search from main box
+    searchBoxRecursive(mainBox);
+    log("Search completed. Found ${foundIds.length} unique elements.");
+    return searchBox;
   }
 
   @override
@@ -182,9 +246,9 @@ class SharedPreferencesRepository extends ChangeNotifier
   @override
   Future<void> updateBox(Box box) async {
     currentBox.boxes[box.id] = box;
+    notifyListeners();
     String jsonString = encodeMapToJson(mainBox);
     log("This box will be saved as JSON: $jsonString");
-    notifyListeners();
     await _persistBoxes(jsonString);
   }
 
@@ -236,5 +300,4 @@ class SharedPreferencesRepository extends ChangeNotifier
       await _persistBoxes(jsonString);
     }
   }
-
 }

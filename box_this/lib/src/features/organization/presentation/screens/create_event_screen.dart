@@ -328,11 +328,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         description: _descriptionController.text,
       );
       if (widget.fromCreateItemScreen) {
+        newEvent.parentId = databaseRepository.currentBox.id;
         widget.onEventCreatedForTempItem?.call(newEvent);
         Navigator.pop(context);
       } else if (widget.fromItemDetailScreen && widget.item != null) {
         log("Creating Item: ${_nameController.text}");
-
+        newEvent.parentId = widget.item!.id;
         widget.item!.addEvent(newEvent);
         databaseRepository.updateItem(widget.item!);
         Navigator.pop(context);

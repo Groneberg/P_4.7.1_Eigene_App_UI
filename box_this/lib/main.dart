@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/firebase_auth_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
@@ -23,7 +26,7 @@ void main() async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await runExampleAuthAndInit();
 
-  final authRepo = FirebaseAuthRepository.instance;
+  // final authRepo = FirebaseAuthRepository.instance;
   // final dbRepo = FirestoreDatabaseRepository.instance;
 
 
@@ -52,9 +55,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider<FirebaseAuthRepository>(
-          create: (_) => authRepo,
-        ),
+        // Provider<FirebaseAuthRepository>(
+        //   create: (_) => authRepo,
+        // ),
         // Provider<FirestoreDatabaseRepository>(
         //   create: (_) => dbRepo,
         // ),

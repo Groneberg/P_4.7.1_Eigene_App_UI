@@ -16,88 +16,114 @@ import 'package:box_this/src/features/organization/presentation/widgets/small_ac
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BoxDetailScreen extends StatelessWidget {
+class BoxDetailScreen extends StatefulWidget {
   final Box box;
 
   const BoxDetailScreen({super.key, required this.box});
 
   @override
+  State<BoxDetailScreen> createState() => _BoxDetailScreenState();
+}
+
+class _BoxDetailScreenState extends State<BoxDetailScreen> {
+  @override
   Widget build(BuildContext context) {
-    SharedPreferencesRepository databaseRepository =
-        Provider.of<SharedPreferencesRepository>(context);
 
-    databaseRepository.currentBox = box;
-    final String title = databaseRepository.currentBox.name;
-    final String description = databaseRepository.currentBox.description;
-    log("Current Box Name: ${databaseRepository.currentBox.name}");
-    log("Current Box: ${databaseRepository.currentBox}");
+    testMethode();
 
-    return SafeArea(
-      top: true,
-      bottom: true,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        appBar: TiTleAppBar(title: title, setBackIcon: false, icon: "box_icon"),
-        body: Column(
-          children: [
-            CustomSearchBar(),
-            Expanded(
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElementInformation(description: description),
-                  AccordionList(typ: "Box", box: box),
-                  AccordionList(typ: "Item", box: box),
-                  AccordionList(typ: "Event", box: box, inBox: true,),
-                ],
-              ),
+    return Consumer<SharedPreferencesRepository>(
+      builder: (context, databaseRepository, child) {
+
+        // KORREKTUR: Holen Sie die FRISCHESTE Version der Box aus dem Repository.
+        // Wir verwenden die ID der 'box', die wir erhalten haben, um die aktuelle Version zu finden.
+        final Box? currentDisplayBox = databaseRepository.mainBox.findBoxById(widget.box.id);
+
+        // KORREKTUR (SICHERHEITSPRÜFUNG): Wenn die Box (z.B. durch Löschen) nicht mehr existiert,
+        // sicher zum vorherigen Screen zurückkehren, um einen Absturz zu verhindern.
+        if (currentDisplayBox == null) {
+          // Wir warten, bis der Build-Frame abgeschlossen ist, um sicher zu 'pop'-en.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pop(context);
+          });
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+
+        // KORREKTUR: Setzen Sie 'currentBox' hier, damit Aktionen (wie "Create Item")
+        // den richtigen Kontext haben.
+        databaseRepository.currentBox = currentDisplayBox;
+        
+        final String title = currentDisplayBox.name;
+        final String description = currentDisplayBox.description;
+
+        return SafeArea(
+          top: true,
+          bottom: true,
+          child: Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            appBar: TiTleAppBar(
+              title: title,
+              setBackIcon: false,
+              icon: "box_icon",
             ),
-            SizedBox(
-              height: 88,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SmallActionButton(
-                    svgIconPath: "assets/svg/icons/box_icon.svg",
-                    onPressed: () {
-                      databaseRepository.currentBox = databaseRepository.mainBox
-                          .findBoxById(box.id)!;
-                      log("Current Box: ${databaseRepository.currentBox.name}");
-                      navigatetoCreateBoxScreen(context);
-                    },
+            body: Column(
+              children: [
+                CustomSearchBar(),
+                Expanded(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElementInformation(description: description),
+                      AccordionList(typ: "Box", box: currentDisplayBox),
+                      AccordionList(typ: "Item", box: currentDisplayBox),
+                      AccordionList(typ: "Event", box: currentDisplayBox, inBox: true),
+                    ],
                   ),
-                  SmallActionButton(
-                    svgIconPath: "assets/svg/icons/item_icon.svg",
-                    onPressed: () {
-                      navigatetoCreateItemScreen(context);
-                    },
+                ),
+                SizedBox(
+                  height: 88,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SmallActionButton(
+                        svgIconPath: "assets/svg/icons/box_icon.svg",
+                        onPressed: () {
+                          navigatetoCreateBoxScreen(context);
+                        },
+                      ),
+                      SmallActionButton(
+                        svgIconPath: "assets/svg/icons/item_icon.svg",
+                        onPressed: () {
+                          navigatetoCreateItemScreen(context);
+                        },
+                      ),
+                      SmallActionButton(
+                        svgIconPath: "assets/svg/icons/event2_icon.svg",
+                        onPressed: () {
+                          navigatetoCreateEventScreen(context);
+                        },
+                      ),
+                      SmallActionButton(
+                        svgIconPath: "assets/svg/icons/edit_icon.svg",
+                        onPressed: () {
+                          navigateToEditBoxScreen(currentDisplayBox, context);
+                        },
+                      ),
+                      SmallActionButton(
+                        svgIconPath: "assets/svg/icons/delete_icon.svg",
+                        onPressed: () {
+                          Navigator.pop(context);
+                          databaseRepository.deleteBox(currentDisplayBox.id);
+                        },
+                      ),
+                    ],
                   ),
-                  SmallActionButton(
-                    svgIconPath: "assets/svg/icons/event2_icon.svg",
-                    onPressed: () {
-                      navigatetoCreateEventScreen(context);
-                    },
-                  ),
-                  SmallActionButton(
-                    svgIconPath: "assets/svg/icons/edit_icon.svg",
-                    onPressed: () {
-                      navigateToEditBoxScreen(box, context);
-                    },
-                  ),
-                  SmallActionButton(
-                    svgIconPath: "assets/svg/icons/delete_icon.svg",
-                    onPressed: () {
-                      Navigator.pop(context);
-                      databaseRepository.deleteBox(box.id);
-                    },
-                  ),
-                ],
-              ),
+                ),
+                CustomBottemNavBar(),
+              ],
             ),
-            CustomBottemNavBar(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -125,10 +151,9 @@ class BoxDetailScreen extends StatelessWidget {
         transitionDuration: Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) =>
             ChangeNotifierProvider(
-            create: (context) => ItemCreationProvider(),
-            child: CreateItemScreen(),
-          ),
-
+              create: (context) => ItemCreationProvider(),
+              child: CreateItemScreen(),
+            ),
 
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -162,11 +187,18 @@ class BoxDetailScreen extends StatelessWidget {
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) =>
-            CreateEventScreen(fromBoxDetailScreen: true,),
+            CreateEventScreen(fromBoxDetailScreen: true),
       ),
       // MaterialPageRoute(
       //   builder: (context) => CreateEventScreen(),
       // ),
     );
+  }
+
+  void testMethode() async {
+    SharedPreferencesRepository databaseRepository =
+        SharedPreferencesRepository.instance;
+    Box search = await databaseRepository.searchAllElements("e");
+    log(search.toString());
   }
 }

@@ -71,10 +71,13 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
       log(
         "Creating Item: ${itemToCreate.name} with ${itemToCreate.events.length} events",
       );
+      itemToCreate.parentId = databaseRepository.currentBox.id;
+      for (var event in creationProvider.item.events.values) {
+        event.parentId = itemToCreate.id;        
+      }
       databaseRepository.createItem(itemToCreate);
       Navigator.pop(context);
     } else {
-      // TODO bessere Fehlerbehandlung
       log("Form is not valid");
     }
   }

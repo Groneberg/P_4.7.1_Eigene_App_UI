@@ -189,6 +189,7 @@ class _CreateBoxScreenState extends State<CreateBoxScreen> {
       Box(
         name: boxNameController.text,
         description: boxDescriptionController.text,
+        parentId: databaseRepository.currentBox.id,
       ),
     );
     log("Current Boxes: ${databaseRepository.currentBox.boxes}");

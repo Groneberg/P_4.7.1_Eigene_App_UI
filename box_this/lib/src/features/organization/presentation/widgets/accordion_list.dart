@@ -50,15 +50,12 @@ class _AccordionListState extends State<AccordionList> {
     switch (typ) {
       case "Box":
         databaseRepository.deleteBox(elementID);
-        databaseRepository.updateBox(databaseRepository.currentBox);
         break;
       case "Item":
         databaseRepository.deleteItem(elementID);
-        databaseRepository.updateBox(databaseRepository.currentBox);
         break;
       case "Event":
         databaseRepository.deleteEvent(elementID);
-        databaseRepository.updateBox(databaseRepository.currentBox);
         break;
       case "EventInItem":
         final parentItem = databaseRepository.currentBox.items[widget.itemId];
@@ -88,38 +85,42 @@ class _AccordionListState extends State<AccordionList> {
       mainAxisSize: MainAxisSize.min,
 
       children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              _isExpanded = !_isExpanded;
-            });
-          },
-          child: Container(
-            height: 48,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              gradient: gradients?.beigeGradient,
-              border: Border.all(color: Theme.of(context).colorScheme.tertiary),
-            ),
-            child: Row(
-              children: [
-                const SizedBox(width: 24),
-                Expanded(
-                  child: Text(
-                    widget.typ,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+        Consumer<SharedPreferencesRepository>(
+          builder: (context, databaseRepository, child) => GestureDetector(
+            onTap: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
+            child: Container(
+              height: 48,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                gradient: gradients?.beigeGradient,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.tertiary,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Icon(
-                    _isExpanded
-                        ? Icons.keyboard_arrow_up_outlined
-                        : Icons.keyboard_arrow_down_outlined,
-                    size: 32,
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Text(
+                      widget.typ,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Icon(
+                      _isExpanded
+                          ? Icons.keyboard_arrow_up_outlined
+                          : Icons.keyboard_arrow_down_outlined,
+                      size: 32,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
