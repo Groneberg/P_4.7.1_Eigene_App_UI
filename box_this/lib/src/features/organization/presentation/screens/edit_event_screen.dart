@@ -108,7 +108,7 @@ class _CreateEventScreenState extends State<EditEventScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: TitleAppBar(
           title: "Edit Event",
-          setBackIcon: false,
+          setBackIcon: true,
           icon: "event_icon",
         ),
         body: Center(

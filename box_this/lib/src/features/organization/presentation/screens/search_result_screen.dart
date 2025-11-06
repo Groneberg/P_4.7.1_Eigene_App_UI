@@ -17,10 +17,7 @@ class SearchResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Da die searchResults-Box (searchResults.boxes, searchResults.items, etc.)
-    // die gefundenen Elemente enthält, können wir sie direkt an AccordionList übergeben.
-    
-    return SafeArea(
+        return SafeArea(
       top: true,
       bottom: true,
       child: Scaffold(

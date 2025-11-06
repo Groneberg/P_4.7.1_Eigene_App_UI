@@ -112,7 +112,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: TitleAppBar(
           title: "Create Event",
-          setBackIcon: false,
+          setBackIcon: true,
           icon: "event_icon",
         ),
         body: Center(

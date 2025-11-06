@@ -128,6 +128,7 @@ class _AccordionListState extends State<AccordionList> {
           ListView.builder(
             padding: EdgeInsets.all(0),
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: elements.length,
             itemBuilder: (context, index) {
               String key = elements.keys.elementAt(index);

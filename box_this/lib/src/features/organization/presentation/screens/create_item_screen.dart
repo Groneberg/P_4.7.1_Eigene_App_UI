@@ -93,7 +93,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: TitleAppBar(
           title: "Create Item",
-          setBackIcon: false,
+          setBackIcon: true,
           icon: "item_icon",
         ),
         body: Column(

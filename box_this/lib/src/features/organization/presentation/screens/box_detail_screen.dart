@@ -52,21 +52,22 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             appBar: TitleAppBar(
               title: title,
-              setBackIcon: false,
+              setBackIcon: true,
               icon: "box_icon",
             ),
             body: Column(
               children: [
                 CustomSearchBar(),
                 Expanded(
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElementInformation(description: description),
-                      AccordionList(typ: "Box", box: currentDisplayBox),
-                      AccordionList(typ: "Item", box: currentDisplayBox),
-                      AccordionList(typ: "Event", box: currentDisplayBox, inBox: true),
-                    ],
+                  child: Scrollbar(
+                    child: ListView(
+                      children: [
+                        ElementInformation(description: description),
+                        AccordionList(typ: "Box", box: currentDisplayBox),
+                        AccordionList(typ: "Item", box: currentDisplayBox),
+                        AccordionList(typ: "Event", box: currentDisplayBox, inBox: true),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(

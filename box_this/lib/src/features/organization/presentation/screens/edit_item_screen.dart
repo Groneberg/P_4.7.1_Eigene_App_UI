@@ -92,7 +92,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: TitleAppBar(
           title: "Edit Item",
-          setBackIcon: false,
+          setBackIcon: true,
           icon: "item_icon",
         ),
         body: Column(

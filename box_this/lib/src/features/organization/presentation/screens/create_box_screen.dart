@@ -48,7 +48,7 @@ class _CreateBoxScreenState extends State<CreateBoxScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: TitleAppBar(
           title: "Create Box",
-          setBackIcon: false,
+          setBackIcon: true,
           icon: "box_icon",
         ),
         body: Center(

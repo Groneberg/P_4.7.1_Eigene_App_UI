@@ -63,201 +63,202 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             appBar: TitleAppBar(
               title: name,
-              setBackIcon: false,
+              setBackIcon: true,
               icon: "item_icon",
             ),
             body: Column(
               children: [
                 CustomSearchBar(),
                 Expanded(
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElementInformation(description: description),
-                      ElementInformation(location: location),
-                      // TODO optisch anpassen
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            LabelName(labelName: "Amount", labelWidth: 80),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
+                  child: Scrollbar(
+                    child: ListView(
+                      children: [
+                        ElementInformation(description: description),
+                        ElementInformation(location: location),
+                        // TODO optisch anpassen
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              LabelName(labelName: "Amount", labelWidth: 80),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
                                   ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: TextFormField(
-                                    controller: _amountController,
-                                    textAlign: TextAlign.right,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge,
-                                    decoration: InputDecoration(
-                                      hintText: "0",
-                                      border: InputBorder.none,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                    ),
+                                    child: TextFormField(
+                                      controller: _amountController,
+                                      textAlign: TextAlign.right,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge,
+                                      decoration: InputDecoration(
+                                        hintText: "0",
+                                        border: InputBorder.none,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              padding: EdgeInsets.all(0),
-                              onPressed: () {
-                                int currentAmount =
-                                    int.tryParse(_amountController.text) ?? 0;
-                                int currentMinAmount =
-                                    int.tryParse(_minAmountController.text) ??
-                                    0;
-                                currentAmount++;
-                                _amountController.text = currentAmount
-                                    .toString();
-                                databaseRepository.updateItemAmount(
-                                  currentDisplayItem.id,
-                                  currentAmount,
-                                  currentMinAmount,
-                                );
-                              },
-                              icon: Icon(
-                                Icons.add,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                size: 40,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            IconButton(
-                              padding: EdgeInsets.all(0),
-                              onPressed: () {
-                                int currentAmount =
-                                    int.tryParse(_amountController.text) ?? 0;
-                                int currentMinAmount =
-                                    int.tryParse(_minAmountController.text) ??
-                                    0;
-                                currentAmount--;
-                                _amountController.text = currentAmount
-                                    .toString();
-                                databaseRepository.updateItemAmount(
-                                  currentDisplayItem.id,
-                                  currentAmount,
-                                  currentMinAmount,
-                                );
-                              },
-                              icon: Icon(
-                                Icons.remove,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                size: 40,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 16),
-
-                      // TODO optisch anpassen
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            LabelName(labelName: "MinAmount", labelWidth: 80),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                  ),
+                              IconButton(
+                                padding: EdgeInsets.all(0),
+                                onPressed: () {
+                                  int currentAmount =
+                                      int.tryParse(_amountController.text) ?? 0;
+                                  int currentMinAmount =
+                                      int.tryParse(_minAmountController.text) ??
+                                      0;
+                                  currentAmount++;
+                                  _amountController.text = currentAmount
+                                      .toString();
+                                  databaseRepository.updateItemAmount(
+                                    currentDisplayItem.id,
+                                    currentAmount,
+                                    currentMinAmount,
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.add,
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  size: 40,
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
+                              ),
+                              SizedBox(width: 8),
+                              IconButton(
+                                padding: EdgeInsets.all(0),
+                                onPressed: () {
+                                  int currentAmount =
+                                      int.tryParse(_amountController.text) ?? 0;
+                                  int currentMinAmount =
+                                      int.tryParse(_minAmountController.text) ??
+                                      0;
+                                  currentAmount--;
+                                  _amountController.text = currentAmount
+                                      .toString();
+                                  databaseRepository.updateItemAmount(
+                                    currentDisplayItem.id,
+                                    currentAmount,
+                                    currentMinAmount,
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.remove,
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  size: 40,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                    
+                        // TODO optisch anpassen
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              LabelName(labelName: "MinAmount", labelWidth: 80),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
                                   ),
-                                  child: TextFormField(
-                                    controller: _minAmountController,
-                                    textAlign: TextAlign.right,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge,
-                                    decoration: InputDecoration(
-                                      hintText: "0",
-                                      border: InputBorder.none,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                    ),
+                                    child: TextFormField(
+                                      controller: _minAmountController,
+                                      textAlign: TextAlign.right,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge,
+                                      decoration: InputDecoration(
+                                        hintText: "0",
+                                        border: InputBorder.none,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              padding: EdgeInsets.all(0),
-                              onPressed: () {
-                                int currentAmount =
-                                    int.tryParse(_amountController.text) ?? 0;
-                                int currentMinAmount =
-                                    int.tryParse(_minAmountController.text) ??
-                                    0;
-                                currentMinAmount++;
-                                _minAmountController.text = currentMinAmount
-                                    .toString();
-                                databaseRepository.updateItemAmount(
-                                  currentDisplayItem.id,
-                                  currentAmount,
-                                  currentMinAmount,
-                                );
-                              },
-                              icon: Icon(
-                                Icons.add,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                size: 40,
+                              IconButton(
+                                padding: EdgeInsets.all(0),
+                                onPressed: () {
+                                  int currentAmount =
+                                      int.tryParse(_amountController.text) ?? 0;
+                                  int currentMinAmount =
+                                      int.tryParse(_minAmountController.text) ??
+                                      0;
+                                  currentMinAmount++;
+                                  _minAmountController.text = currentMinAmount
+                                      .toString();
+                                  databaseRepository.updateItemAmount(
+                                    currentDisplayItem.id,
+                                    currentAmount,
+                                    currentMinAmount,
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.add,
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  size: 40,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            IconButton(
-                              padding: EdgeInsets.all(0),
-                              onPressed: () {
-                                int currentAmount =
-                                    int.tryParse(_amountController.text) ?? 0;
-                                int currentMinAmount =
-                                    int.tryParse(_minAmountController.text) ??
-                                    0;
-                                currentMinAmount--;
-                                _minAmountController.text = currentMinAmount
-                                    .toString();
-                                databaseRepository.updateItemAmount(
-                                  currentDisplayItem.id,
-                                  currentAmount,
-                                  currentMinAmount,
-                                );
-                              },
-                              icon: Icon(
-                                Icons.remove,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                size: 40,
+                              SizedBox(width: 8),
+                              IconButton(
+                                padding: EdgeInsets.all(0),
+                                onPressed: () {
+                                  int currentAmount =
+                                      int.tryParse(_amountController.text) ?? 0;
+                                  int currentMinAmount =
+                                      int.tryParse(_minAmountController.text) ??
+                                      0;
+                                  currentMinAmount--;
+                                  _minAmountController.text = currentMinAmount
+                                      .toString();
+                                  databaseRepository.updateItemAmount(
+                                    currentDisplayItem.id,
+                                    currentAmount,
+                                    currentMinAmount,
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.remove,
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  size: 40,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 16),
-
-                      AccordionList(
-                        typ: "EventInItem",
-                        box: databaseRepository.currentBox,
-                        inBox: false,
-                        itemId: widget.item.id,
-                      ),
-                    ],
+                        SizedBox(height: 16),
+                    
+                        AccordionList(
+                          typ: "EventInItem",
+                          box: databaseRepository.currentBox,
+                          inBox: false,
+                          itemId: widget.item.id,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(
