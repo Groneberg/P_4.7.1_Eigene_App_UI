@@ -6,10 +6,6 @@ import 'package:box_this/src/common/widgets/title_app_bar.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
-import 'package:box_this/src/features/organization/presentation/screens/box_detail_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/create_item_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
-import 'package:box_this/src/features/organization/presentation/screens/item_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
 
 import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
@@ -17,6 +13,8 @@ import 'package:box_this/src/theme/custom_extensions/gradients_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+
+import 'package:intl/intl.dart';
 
 class CreateEventScreen extends StatefulWidget {
   final Item? item;
@@ -44,11 +42,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _dateController = TextEditingController();
 
   final TextEditingController _itemNameController = TextEditingController();
-
   final TextEditingController _descriptionController = TextEditingController();
 
   // bool _showDatePicker = false;
@@ -62,7 +58,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   //     firstDate: DateTime(2000),
   //     lastDate: DateTime(2101),
   //   );
-
   //   if (picked != null) {
   //     setState(() {
   //       _dateController.text = DateFormat('dd.MM.yyyy').format(picked);
@@ -101,6 +96,31 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.dispose();
   }
 
+  /// Displays a red ‘SnackBar’ at the bottom of the screen.
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+    );
+  }
+
+  /// Attempts to combine the date and time from the
+  /// text fields into a DateTime object.
+  DateTime? _parseCombinedDateTime() {
+    try {
+      final DateFormat format = DateFormat('dd.MM.yyyy HH:mm');
+
+      return format.parseStrict(
+        '${_dateController.text} ${_itemNameController.text}',
+      );
+    } catch (e) {
+      log("Fehler beim Parsen des Datums/Zeit: $e");
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final gradients = Theme.of(context).extension<GradientsExtension>();
@@ -119,25 +139,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           child: Column(
             children: [
               CustomSearchBar(),
-              // BoxDataInput(
-              //   boxTextEditingController: boxTextEditingController,
-              // ), // Expanded
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
-                  // padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       spacing: 24,
-                      // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // ElementNameInput(icon: "box_icon", hintText: "Boxname...", boxTextEditingController: boxTextEditingController,),
                         Row(
                           children: [
                             SizedBox(
                               width: 48,
-                              // padding: const EdgeInsets.symmetric(horizontal: 22),
                               child: SvgPicture.asset(
                                 "assets/svg/icons/event_icon.svg",
                                 height: 34,
@@ -167,13 +180,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                     hintText: "Eventname...",
                                     border: InputBorder.none,
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Name required';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ),
                           ],
                         ),
-
-                        // --------------------
                         Row(
                           children: [
                             // TODO später optische anpassung
@@ -203,6 +220,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                     hintText: "01.01.2025",
                                     border: InputBorder.none,
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Date required';
+                                    }
+                                    try {
+                                      DateFormat(
+                                        'dd.MM.yyyy',
+                                      ).parseStrict(value);
+                                      return null;
+                                    } catch (e) {
+                                      return 'Format: TT.MM.JJJJ';
+                                    }
+                                  },
                                 ),
                               ),
                             ),
@@ -237,13 +267,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                     hintText: "12:00",
                                     border: InputBorder.none,
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Time required';
+                                    }
+                                    try {
+                                      DateFormat('HH:mm').parseStrict(value);
+                                      return null;
+                                    } catch (e) {
+                                      return 'Format: HH:MM';
+                                    }
+                                  },
                                 ),
                               ),
                             ),
                           ],
                         ),
-
-                        // --------------------
                         Column(
                           children: [
                             LabelName(
@@ -316,88 +355,58 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   void createEvent(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
-      final databaseRepository = Provider.of<SharedPreferencesRepository>(
+    if (!_formKey.currentState!.validate()) {
+      log("Formular ist ungültig (Formatfehler)");
+      return;
+    }
+
+    final DateTime? scheduledTime = _parseCombinedDateTime();
+
+    if (scheduledTime == null) {
+      _showErrorSnackBar(context, "Invalid date or time format.");
+      return;
+    }
+
+    /// Check for past events (with 1 minute tolerance)
+    final DateTime checkTime = DateTime.now().subtract(
+      const Duration(minutes: 1),
+    );
+
+    if (scheduledTime.isBefore(checkTime)) {
+      log("Fehler: Der gewählte Zeitpunkt liegt in der Vergangenheit.");
+      _showErrorSnackBar(
         context,
-        listen: false,
+        "Der gewählte Zeitpunkt liegt in der Vergangenheit.",
       );
-      final Event newEvent = Event(
-        name: _nameController.text,
-        date: _dateController.text,
-        time: _itemNameController.text,
-        description: _descriptionController.text,
-      );
-      if (widget.fromCreateItemScreen) {
-        newEvent.parentId = databaseRepository.currentBox.id;
-        widget.onEventCreatedForTempItem?.call(newEvent);
-        Navigator.pop(context);
-      } else if (widget.fromItemDetailScreen && widget.item != null) {
-        log("Creating Item: ${_nameController.text}");
-        newEvent.parentId = widget.item!.id;
-        widget.item!.addEvent(newEvent);
-        databaseRepository.updateItem(widget.item!);
-        Navigator.pop(context);
-      } else if (widget.fromBoxDetailScreen) {
-        databaseRepository.createEvent(newEvent);
-        Navigator.pop(context);
-      } else {
-        log("No creation context found, event not created.");
-      }
+      return;
+    }
+
+    final databaseRepository = Provider.of<SharedPreferencesRepository>(
+      context,
+      listen: false,
+    );
+
+    final Event newEvent = Event(
+      name: _nameController.text,
+      date: _dateController.text,
+      time: _itemNameController.text,
+      description: _descriptionController.text,
+    );
+
+    if (widget.fromCreateItemScreen) {
+      widget.onEventCreatedForTempItem?.call(newEvent);
+      Navigator.pop(context);
+    } else if (widget.fromItemDetailScreen && widget.item != null) {
+      log("Creating Item: ${_nameController.text}");
+      newEvent.parentId = widget.item!.id;
+      databaseRepository.createEventInItem(newEvent, widget.item!.id);
+      Navigator.pop(context);
+    } else if (widget.fromBoxDetailScreen) {
+      newEvent.parentId = databaseRepository.currentBox.id;
+      databaseRepository.createEvent(newEvent);
+      Navigator.pop(context);
     } else {
-      // TODO bessere Fehlerbehandlung
-      log("Form is not valid");
+      log("No creation context found, event not created.");
     }
   }
-}
-
-// TODO später Navigation anpassen Item oder Box screen
-void navigatetoHomeScreen(BuildContext context) {
-  Navigator.push(
-    context,
-    PageRouteBuilder(
-      transitionDuration: Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(opacity: animation, child: child);
-      },
-    ),
-    // MaterialPageRoute(
-    //   builder: (context) => HomeScreen(),
-    // ),
-  );
-}
-
-void navigateBackTo(
-  BuildContext context,
-  Item? item,
-  bool fromBoxDetailScreen,
-  bool fromItemDetailScreen,
-  bool fromCreateItemScreen,
-) {
-  var priviousScreen;
-  if (fromBoxDetailScreen) {
-    priviousScreen = BoxDetailScreen(
-      box: SharedPreferencesRepository.instance.currentBox,
-    );
-  } else if (fromItemDetailScreen && item != null) {
-    priviousScreen = ItemDetailScreen(item: item);
-  } else if (fromCreateItemScreen) {
-    priviousScreen = CreateItemScreen();
-  } else {
-    priviousScreen = HomeScreen();
-  }
-
-  Navigator.push(
-    context,
-    PageRouteBuilder(
-      transitionDuration: Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) => priviousScreen,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(opacity: animation, child: child);
-      },
-    ),
-    // MaterialPageRoute(
-    //   builder: (context) => CreateBoxScreen(),
-    // ),
-  );
 }

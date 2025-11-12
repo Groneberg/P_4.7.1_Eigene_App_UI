@@ -30,7 +30,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     return Consumer<SharedPreferencesRepository>(
       builder: (context, databaseRepository, child) {
         final currentDisplayItem =
-            databaseRepository.currentBox.items[widget.item.id];
+            databaseRepository.mainBox.findItemById(widget.item.id);
 
         if (currentDisplayItem == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {

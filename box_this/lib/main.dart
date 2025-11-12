@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/repositories/firebase_auth_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
+import 'package:box_this/src/data/service/notification_service.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/theme/app_theme.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -11,17 +12,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'firebase_options.dart';
 
+
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final FirestoreDatabaseRepository repository = FirestoreDatabaseRepository();
   // final MockDatabaseRepository databaseRepository= MockDatabaseRepository();
+
+  // --- SharedPreferences Setup (Ihr bestehender Code) ---
   final SharedPreferencesRepository databaseRepository =
       SharedPreferencesRepository.instance;
-  // await repository.initializePersistence();
+  // WICHTIG: Sie müssen die Persistenz (Daten laden) hier initialisieren,
+  // BEVOR die App startet, nicht im HomeScreen.
+  await databaseRepository.initializePersistence();
   
-
 //Firebase / FireStore Setup
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await runExampleAuthAndInit();
@@ -52,6 +57,16 @@ void main() async {
   // log('--- Ende Authentifizierungs- und Initialisierungs-Test ---');
 
   // runApp(const MainApp());
+
+  // --- NEU: Notification Service Setup ---
+  // 1. Instanz holen
+  final NotificationService notificationService = NotificationService();
+  // 2. Service initialisieren
+  await notificationService.init(); 
+  // 3. Berechtigungen anfordern (wichtig für iOS & Android 13+)
+  await notificationService.requestPermissions();
+  // --- Ende Notification Setup ---
+
   runApp(
     MultiProvider(
       providers: [

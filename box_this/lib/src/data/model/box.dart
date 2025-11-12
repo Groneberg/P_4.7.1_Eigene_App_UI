@@ -15,7 +15,7 @@ class Box {
 
   Box({
     String? id,
-    parentId = "",
+    this.parentId,
     required this.name,
     required this.description,
   }) : this.id = id ?? Uuid().v4();

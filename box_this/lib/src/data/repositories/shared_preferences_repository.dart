@@ -5,11 +5,16 @@ import 'package:box_this/src/data/model/box.dart';
 import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/model/item.dart';
 import 'package:box_this/src/data/repositories/database_repository.dart';
+import 'package:box_this/src/data/service/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:intl/intl.dart'; // Sie müssen 'intl' zu pubspec.yaml hinzufügen
+
 class SharedPreferencesRepository extends ChangeNotifier
     implements DatabaseRepository {
+  final NotificationService _notificationService = NotificationService();
+
   Box mainBox = Box(name: "mainBox", description: "");
   Box currentBox = Box(name: "currentBox", description: "");
 
@@ -59,6 +64,19 @@ class SharedPreferencesRepository extends ChangeNotifier
     currentBox.addEvent(event);
     notifyListeners();
     await _persistBoxes(encodeMapToJson(mainBox));
+
+    final DateTime? scheduleTime = _parseEventDateTime(event);
+    if (scheduleTime != null) {
+      await _notificationService.scheduleNotification(
+        id: _getNotificationId(event.id),
+        title: event.name,
+        body: event.description.isNotEmpty
+            ? event.description
+            : "Erinnerung für ${event.name}",
+        scheduledDateTime: scheduleTime,
+        payload: event.id,
+      );
+    }
   }
 
   Future<void> createEventInItem(Event event, String itemId) async {
@@ -68,6 +86,18 @@ class SharedPreferencesRepository extends ChangeNotifier
       targetItem.addEvent(event);
       notifyListeners();
       await _persistBoxes(encodeMapToJson(mainBox));
+
+      final DateTime? scheduleTime = _parseEventDateTime(event);
+      if (scheduleTime != null) {
+        await _notificationService.scheduleNotification(
+          id: _getNotificationId(event.id),
+          title: event.name,
+          body:
+              "In ${targetItem.name}: ${event.description}",
+          scheduledDateTime: scheduleTime,
+          payload: event.id,
+        );
+      }
     } else {
       log("Error: Item with ID $itemId could not be found in the box tree.");
     }
@@ -110,6 +140,8 @@ class SharedPreferencesRepository extends ChangeNotifier
     }
     notifyListeners();
     await _persistBoxes(encodeMapToJson(mainBox));
+
+    await _notificationService.cancelNotification(_getNotificationId(id));
   }
 
   Future<void> deleteEventInItem(String eventID, String itemID) async {
@@ -118,6 +150,8 @@ class SharedPreferencesRepository extends ChangeNotifier
       item.events.remove(eventID);
       notifyListeners();
       await _persistBoxes(encodeMapToJson(mainBox));
+
+      await _notificationService.cancelNotification(_getNotificationId(eventID));
     } else {
       log("Item not found: $itemID. Event could not be deleted.");
     }
@@ -299,5 +333,19 @@ class SharedPreferencesRepository extends ChangeNotifier
       notifyListeners();
       await _persistBoxes(jsonString);
     }
+  }
+
+  DateTime? _parseEventDateTime(Event event) {
+    try {
+      final DateFormat dateFormat = DateFormat('dd.MM.yyyy HH:mm');
+      return dateFormat.parse('${event.date} ${event.time}');
+    } catch (e) {
+      log("Fehler beim Parsen des Event-Datums: $e");
+      return null;
+    }
+  }
+
+  int _getNotificationId(String eventId) {
+    return eventId.hashCode.abs() % 2147483647;
   }
 }

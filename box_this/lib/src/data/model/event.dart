@@ -11,7 +11,7 @@ class Event {
 
   Event({
     String? id,
-    parentId = "",
+    this.parentId,
     required this.name,
     required this.time,
     required this.date,

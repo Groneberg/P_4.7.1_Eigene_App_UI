@@ -16,7 +16,7 @@ class Item {
 
   Item({
     String? id,
-    parentId = "",
+    this.parentId,
     required this.name,
     required this.description,
     required this.location,

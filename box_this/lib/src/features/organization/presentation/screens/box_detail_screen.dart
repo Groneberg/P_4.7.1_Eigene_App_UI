@@ -30,18 +30,19 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
   Widget build(BuildContext context) {
     return Consumer<SharedPreferencesRepository>(
       builder: (context, databaseRepository, child) {
-
-        final Box? currentDisplayBox = databaseRepository.mainBox.findBoxById(widget.box.id);
+        final Box? currentDisplayBox = databaseRepository.mainBox.findBoxById(
+          widget.box.id,
+        );
 
         if (currentDisplayBox == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pop(context);
           });
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
-        databaseRepository.currentBox = currentDisplayBox;
-        
         final String title = currentDisplayBox.name;
         final String description = currentDisplayBox.description;
 
@@ -65,7 +66,11 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
                         ElementInformation(description: description),
                         AccordionList(typ: "Box", box: currentDisplayBox),
                         AccordionList(typ: "Item", box: currentDisplayBox),
-                        AccordionList(typ: "Event", box: currentDisplayBox, inBox: true),
+                        AccordionList(
+                          typ: "Event",
+                          box: currentDisplayBox,
+                          inBox: true,
+                        ),
                       ],
                     ),
                   ),
@@ -78,18 +83,21 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
                       SmallActionButton(
                         svgIconPath: "assets/svg/icons/box_icon.svg",
                         onPressed: () {
+                          databaseRepository.currentBox = currentDisplayBox;
                           navigatetoCreateBoxScreen(context);
                         },
                       ),
                       SmallActionButton(
                         svgIconPath: "assets/svg/icons/item_icon.svg",
                         onPressed: () {
+                          databaseRepository.currentBox = currentDisplayBox;
                           navigatetoCreateItemScreen(context);
                         },
                       ),
                       SmallActionButton(
                         svgIconPath: "assets/svg/icons/event2_icon.svg",
                         onPressed: () {
+                          databaseRepository.currentBox = currentDisplayBox;
                           navigatetoCreateEventScreen(context);
                         },
                       ),
