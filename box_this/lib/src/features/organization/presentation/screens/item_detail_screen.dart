@@ -12,6 +12,7 @@ import 'package:box_this/src/features/organization/presentation/widgets/accordio
 import 'package:box_this/src/features/organization/presentation/widgets/element_information.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/label_name.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/user_prompt_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,12 +26,33 @@ class ItemDetailScreen extends StatefulWidget {
 }
 
 class _ItemDetailScreenState extends State<ItemDetailScreen> {
+late TextEditingController _amountController;
+  late TextEditingController _minAmountController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Controller mit den Werten des übergebenen (initialen) Items initialisieren
+    _amountController =
+        TextEditingController(text: widget.item.amount.toString());
+    _minAmountController =
+        TextEditingController(text: widget.item.minAmount.toString());
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _minAmountController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SharedPreferencesRepository>(
       builder: (context, databaseRepository, child) {
-        final currentDisplayItem =
-            databaseRepository.mainBox.findItemById(widget.item.id);
+        final currentDisplayItem = databaseRepository.mainBox.findItemById(
+          widget.item.id,
+        );
 
         if (currentDisplayItem == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -43,18 +65,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
         final String id = currentDisplayItem.id;
         final String name = currentDisplayItem.name;
-
         final String description = currentDisplayItem.description;
         final String location = currentDisplayItem.location;
-
-        TextEditingController _amountController = TextEditingController(
-          text: databaseRepository.currentBox.items[id]!.amount.toString(),
-          // text: widget.item.amount.toString(),
-        );
-        TextEditingController _minAmountController = TextEditingController(
-          text: databaseRepository.currentBox.items[id]!.minAmount.toString(),
-          // text: widget.item.minAmount.toString(),
-        );
 
         return SafeArea(
           top: true,
@@ -78,7 +90,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         // TODO optisch anpassen
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    
+
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,14 +135,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                   _amountController.text = currentAmount
                                       .toString();
                                   databaseRepository.updateItemAmount(
-                                    currentDisplayItem.id,
+                                    id,
                                     currentAmount,
                                     currentMinAmount,
                                   );
                                 },
                                 icon: Icon(
                                   Icons.add,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   size: 40,
                                 ),
                               ),
@@ -147,14 +161,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                   _amountController.text = currentAmount
                                       .toString();
                                   databaseRepository.updateItemAmount(
-                                    currentDisplayItem.id,
+                                    id,
                                     currentAmount,
                                     currentMinAmount,
                                   );
                                 },
                                 icon: Icon(
                                   Icons.remove,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   size: 40,
                                 ),
                               ),
@@ -162,11 +178,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           ),
                         ),
                         SizedBox(height: 16),
-                    
+
                         // TODO optisch anpassen
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    
+
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,14 +227,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                   _minAmountController.text = currentMinAmount
                                       .toString();
                                   databaseRepository.updateItemAmount(
-                                    currentDisplayItem.id,
+                                    id,
                                     currentAmount,
                                     currentMinAmount,
                                   );
                                 },
                                 icon: Icon(
                                   Icons.add,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   size: 40,
                                 ),
                               ),
@@ -235,14 +253,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                   _minAmountController.text = currentMinAmount
                                       .toString();
                                   databaseRepository.updateItemAmount(
-                                    currentDisplayItem.id,
+                                    id,
                                     currentAmount,
                                     currentMinAmount,
                                   );
                                 },
                                 icon: Icon(
                                   Icons.remove,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   size: 40,
                                 ),
                               ),
@@ -250,12 +270,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           ),
                         ),
                         SizedBox(height: 16),
-                    
+
                         AccordionList(
                           typ: "EventInItem",
                           box: databaseRepository.currentBox,
                           inBox: false,
-                          itemId: widget.item.id,
+                          itemId: id,
                         ),
                       ],
                     ),
@@ -273,7 +293,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         onPressed: () {
                           navigatetoCreateEventScreen(
                             context,
-                            widget.item,
+                            currentDisplayItem,
                             true,
                             false,
                           );
@@ -282,14 +302,24 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       SmallActionButton(
                         svgIconPath: "assets/svg/icons/edit_icon.svg",
                         onPressed: () {
-                          navigateToEditItemScreen(widget.item, context);
+                          navigateToEditItemScreen(currentDisplayItem, context);
                         },
                       ),
                       SmallActionButton(
                         svgIconPath: "assets/svg/icons/delete_icon.svg",
-                        onPressed: () {
-                          Navigator.pop(context);
-                          databaseRepository.deleteItem(widget.item.name);
+                        onPressed: () async {
+                          final bool didConfirmDelete =
+                              await showDeleteConfirmationDialog(
+                                context,
+                                title: "Delete '$name'?",
+                              );
+
+                          if (didConfirmDelete) {
+                            if (!mounted) return;
+
+                            Navigator.pop(context);
+                            databaseRepository.deleteItem(id);
+                          }
                         },
                       ),
                     ],

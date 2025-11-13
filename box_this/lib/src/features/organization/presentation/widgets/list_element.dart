@@ -7,6 +7,7 @@ import 'package:box_this/src/features/organization/presentation/screens/edit_box
 import 'package:box_this/src/features/organization/presentation/screens/edit_event_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/edit_item_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/item_detail_screen.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/user_prompt_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -146,11 +147,16 @@ class _ListElementState extends State<ListElement> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        // SharedPreferencesRepository.instance.deleteBox(
-                        //   widget.element.name,
-                        // );
-                        widget.onDelete();
+                      onTap: () async {
+                        final bool didConfirmDelete =
+                            await showDeleteConfirmationDialog(
+                              context,
+                              title: "Delete '${widget.element.name}'?",
+                            );
+
+                        if (didConfirmDelete) {
+                          widget.onDelete();
+                        }
                       },
                       child: Icon(
                         Icons.delete,
@@ -269,6 +275,5 @@ class _ListElementState extends State<ListElement> {
         // MaterialPageRoute(builder: (context) => BoxDetailScreen(box: widget.element)),
       );
     }
-
   }
 }

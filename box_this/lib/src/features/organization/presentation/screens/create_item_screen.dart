@@ -403,7 +403,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                   ),
                   child: Center(
                     child: Text(
-                      "Creat",
+                      "Create",
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ),

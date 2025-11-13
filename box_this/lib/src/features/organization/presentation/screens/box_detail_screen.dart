@@ -13,6 +13,7 @@ import 'package:box_this/src/features/organization/presentation/screens/edit_box
 import 'package:box_this/src/features/organization/presentation/widgets/accordion_list.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/element_information.dart';
 import 'package:box_this/src/features/organization/presentation/widgets/small_action_button.dart';
+import 'package:box_this/src/features/organization/presentation/widgets/user_prompt_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -109,9 +110,18 @@ class _BoxDetailScreenState extends State<BoxDetailScreen> {
                       ),
                       SmallActionButton(
                         svgIconPath: "assets/svg/icons/delete_icon.svg",
-                        onPressed: () {
-                          Navigator.pop(context);
-                          databaseRepository.deleteBox(currentDisplayBox.id);
+                        onPressed: () async {
+                          final bool didConfirmDelete =
+                              await showDeleteConfirmationDialog(
+                                context,
+                                title: "Delete '${currentDisplayBox.name}'?",
+                              );
+
+                          if (didConfirmDelete) {
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                            databaseRepository.deleteBox(currentDisplayBox.id);
+                          }
                         },
                       ),
                     ],

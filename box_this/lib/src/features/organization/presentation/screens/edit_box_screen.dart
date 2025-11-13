@@ -55,7 +55,7 @@ class _EditBoxScreenState extends State<EditBoxScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: TitleAppBar(
           title: "Edit Box",
-          setBackIcon: false,
+          setBackIcon: true,
           icon: "box_icon",
         ),
         body: Center(
