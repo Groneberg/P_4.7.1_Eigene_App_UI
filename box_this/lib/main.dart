@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:box_this/src/data/model/box.dart';
+import 'package:box_this/src/data/model/event.dart';
 import 'package:box_this/src/data/repositories/firebase_auth_repository.dart';
 import 'package:box_this/src/data/repositories/shared_preferences_repository.dart';
 import 'package:box_this/src/data/service/notification_service.dart';
+import 'package:box_this/src/features/organization/presentation/screens/event_detail_screen.dart';
 import 'package:box_this/src/features/organization/presentation/screens/home_screen.dart';
 import 'package:box_this/src/theme/app_theme.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -151,6 +153,7 @@ class MainApp extends StatelessWidget {
           //child: CreateEventScreen(),
           //child: AuthScreen(),
           //child: FirestoreTestScreen(),
+          // child: EventDetailScreen(event: Event(name: "Test", time: "12:25", date: "14.12.2025", description: "")),
       ),
     );
   }
