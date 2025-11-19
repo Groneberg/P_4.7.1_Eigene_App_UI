@@ -106,7 +106,7 @@ class _AccordionListState extends State<AccordionList> {
                   const SizedBox(width: 24),
                   Expanded(
                     child: Text(
-                      widget.typ,
+                      (widget.typ == "EventInItem") ? "Event" : widget.typ,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),

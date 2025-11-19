@@ -24,7 +24,7 @@ class ItemCreationProvider extends ChangeNotifier {
   }
 
   void addEvent(Event event) {
-    _tempItem.events[event.name] = event;
+    _tempItem.events[event.id] = event;
     notifyListeners();
   }
 

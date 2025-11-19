@@ -40,6 +40,7 @@ class SharedPreferencesRepository extends ChangeNotifier
   Future<void> _persistBoxes(String jsonString) async {
     try {
       _prefs.setString("mainBox", jsonString);
+      getStorageSizeInKB();
     } catch (e) {
       throw Exception("Error saving boxes: $e");
     }
@@ -348,4 +349,21 @@ class SharedPreferencesRepository extends ChangeNotifier
   int _getNotificationId(String eventId) {
     return eventId.hashCode.abs() % 2147483647;
   }
+
+  double getStorageSizeInKB() {
+    final String? jsonString = _prefs.getString("mainBox");
+
+    if (jsonString == null || jsonString.isEmpty) {
+      log("Keine Daten in mainBox gefunden.");
+      return 0.0;
+    }
+
+    final List<int> bytes = utf8.encode(jsonString);
+    final int byteCount = bytes.length;
+    final double kb = byteCount / 1024.0;
+
+    log("Aktuelle Speichergröße (mainBox): $byteCount Bytes / ${kb.toStringAsFixed(2)} KB");
+    return kb;
+  }
+
 }

@@ -26,9 +26,9 @@ class SearchResultScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         appBar: TitleAppBar(
-          title: "Results for '$query'",
+          title: "Search results",
           setBackIcon: true,
-          icon: "search",
+          icon: "search_icon",
         ),
         body: Column(
           children: [
@@ -47,7 +47,7 @@ class SearchResultScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      "${getAmountOfFoundElements()} elements found",
+                      "Results for '$query' ${getAmountOfFoundElements()} elements found",
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),

@@ -33,6 +33,7 @@ class HomeScreen extends StatelessWidget {
 
                 return Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: ListView.builder(
@@ -64,7 +65,7 @@ class HomeScreen extends StatelessWidget {
               },
             ),
 
-            SizedBox(height: 90),
+            SizedBox(height: 24),
             CustomBottemNavBar(),
           ],
         ),

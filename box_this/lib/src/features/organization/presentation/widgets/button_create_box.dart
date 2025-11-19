@@ -17,7 +17,7 @@ class ButtonCreateBox extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             color: Theme.of(context).colorScheme.tertiary,
-            width: 1.0, // 1px
+            width: 1.0, 
           ),
           gradient: gradients?.beigeGradient,
         ),
@@ -28,7 +28,7 @@ class ButtonCreateBox extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 color: Theme.of(context).colorScheme.tertiary,
-                width: 2.0, // 1px
+                width: 2.0, 
               ),
               gradient: gradients?.beigeGradient,
             ),
