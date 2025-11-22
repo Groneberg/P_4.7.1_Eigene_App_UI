@@ -126,6 +126,12 @@ class Box {
     if (this.events.containsKey(eventId)) {
       return this.events[eventId];
     }
+    // checks if the items of this box contain the event
+    for (var item in this.items.values) {
+      if (item.events.containsKey(eventId)) {
+        return item.events[eventId];
+      }
+    }
     // Recursively search in child boxes
     for (var childBox in this.boxes.values) {
       var found = childBox.findEventById(eventId);

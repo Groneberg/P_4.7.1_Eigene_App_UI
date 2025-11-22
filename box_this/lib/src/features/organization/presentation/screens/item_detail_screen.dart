@@ -32,7 +32,6 @@ late TextEditingController _amountController;
   @override
   void initState() {
     super.initState();
-    // Controller mit den Werten des übergebenen (initialen) Items initialisieren
     _amountController =
         TextEditingController(text: widget.item.amount.toString());
     _minAmountController =

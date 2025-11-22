@@ -48,7 +48,9 @@ class SharedPreferencesRepository extends ChangeNotifier
 
   String encodeMapToJson(Box box) {
     String jsonString = jsonEncode(box.toJson());
+    log("----");
     log("This box will be encoded to JSON: $jsonString");
+    log("----");
     return jsonString;
   }
 
@@ -93,8 +95,7 @@ class SharedPreferencesRepository extends ChangeNotifier
         await _notificationService.scheduleNotification(
           id: _getNotificationId(event.id),
           title: event.name,
-          body:
-              "In ${targetItem.name}: ${event.description}",
+          body: "In ${targetItem.name}: ${event.description}",
           scheduledDateTime: scheduleTime,
           payload: event.id,
         );
@@ -152,7 +153,9 @@ class SharedPreferencesRepository extends ChangeNotifier
       notifyListeners();
       await _persistBoxes(encodeMapToJson(mainBox));
 
-      await _notificationService.cancelNotification(_getNotificationId(eventID));
+      await _notificationService.cancelNotification(
+        _getNotificationId(eventID),
+      );
     } else {
       log("Item not found: $itemID. Event could not be deleted.");
     }
@@ -280,16 +283,40 @@ class SharedPreferencesRepository extends ChangeNotifier
 
   @override
   Future<void> updateBox(Box box) async {
-    currentBox.boxes[box.id] = box;
+    Box? existingBox = mainBox.findBoxById(box.id);
+
+    if (existingBox != null) {
+      existingBox.name = box.name;
+      existingBox.description = box.description;
+      log("Box '${existingBox.name}' updated.");
+    } else {
+      log("Error: Could not find box with ID ${box.id} to update.");
+      return;
+    }
     notifyListeners();
     String jsonString = encodeMapToJson(mainBox);
+    log("----");
     log("This box will be saved as JSON: $jsonString");
+    log("----");
     await _persistBoxes(jsonString);
   }
 
   @override
   Future<void> updateEvent(Event event) async {
-    currentBox.events[event.id] = event;
+    Event? existingEvent = mainBox.findEventById(event.id);
+
+    if (existingEvent != null) {
+      existingEvent.name = event.name;
+      existingEvent.description = event.description;
+      existingEvent.date = event.date;
+      existingEvent.time = event.time;
+
+      log("Event '${existingEvent.name}' updated.");
+    } else {
+      log("Error: Could not find event with ID ${event.id} to update.");
+      return;
+    }
+
     String jsonString = encodeMapToJson(mainBox);
     log("This event will be saved as JSON: $jsonString");
     notifyListeners();
@@ -298,26 +325,49 @@ class SharedPreferencesRepository extends ChangeNotifier
 
   @override
   Future<void> updateItem(Item item) async {
-    currentBox.items[item.id] = item;
+    Item? existingItem = mainBox.findItemById(item.id);
+
+    if (existingItem != null) {
+      existingItem.name = item.name;
+      existingItem.description = item.description;
+      existingItem.location = item.location;
+      existingItem.amount = item.amount;
+      existingItem.minAmount = item.minAmount;
+
+      log("Item '${existingItem.name}' updated.");
+    } else {
+      log("Error: Could not find item with ID ${item.id} to update.");
+      return;
+    }
+
     String jsonString = encodeMapToJson(mainBox);
     log("This item will be saved as JSON: $jsonString");
     notifyListeners();
     await _persistBoxes(jsonString);
   }
 
-  Future<void> updateEventInItem(Event event, String itemID) async {
-    Item? item = currentBox.items[itemID];
-    if (item != null) {
-      item.events[event.id] = event;
+  Future<void> updateEventInItem(Event event, String itemID) async {// 1. Das Eltern-Item suchen
+    Item? parentItem = mainBox.findItemById(itemID);
 
-      String jsonString = encodeMapToJson(mainBox);
-      log("Event in Item updated: $jsonString");
+    if (parentItem != null) {
+      Event? existingEvent = parentItem.events[event.id];
+      
+      if (existingEvent != null) {
+         existingEvent.name = event.time;
+         existingEvent.description = event.description;
+      } else {
+         parentItem.events[event.id] = event;
+      }
+
       notifyListeners();
-      await _persistBoxes(jsonString);
+      await _persistBoxes(encodeMapToJson(mainBox));
+      
+      await _notificationService.cancelNotification(_getNotificationId(event.id));
+      _rescheduleEventNotification(existingEvent ?? event);
+      
     } else {
       log("Item not found: $itemID. Event could not be updated.");
-    }
-  }
+    }}
 
   Future<void> updateItemAmount(
     String itemID,
@@ -341,7 +391,7 @@ class SharedPreferencesRepository extends ChangeNotifier
       final DateFormat dateFormat = DateFormat('dd.MM.yyyy HH:mm');
       return dateFormat.parse('${event.date} ${event.time}');
     } catch (e) {
-      log("Fehler beim Parsen des Event-Datums: $e");
+      log("Error parsing the event date: $e");
       return null;
     }
   }
@@ -350,11 +400,24 @@ class SharedPreferencesRepository extends ChangeNotifier
     return eventId.hashCode.abs() % 2147483647;
   }
 
+  Future<void> _rescheduleEventNotification(Event event) async {
+    final DateTime? scheduleTime = _parseEventDateTime(event);
+    if (scheduleTime != null) {
+      await _notificationService.scheduleNotification(
+        id: _getNotificationId(event.id),
+        title: event.name,
+        body: event.description.isNotEmpty ? event.description : "Event Reminder",
+        scheduledDateTime: scheduleTime,
+        payload: event.id,
+      );
+    }
+  }
+
   double getStorageSizeInKB() {
     final String? jsonString = _prefs.getString("mainBox");
 
     if (jsonString == null || jsonString.isEmpty) {
-      log("Keine Daten in mainBox gefunden.");
+      log("No Data found in mainBox.");
       return 0.0;
     }
 
@@ -362,8 +425,9 @@ class SharedPreferencesRepository extends ChangeNotifier
     final int byteCount = bytes.length;
     final double kb = byteCount / 1024.0;
 
-    log("Aktuelle Speichergröße (mainBox): $byteCount Bytes / ${kb.toStringAsFixed(2)} KB");
+    log(
+      "Current memory size (mainBox): $byteCount Bytes / ${kb.toStringAsFixed(2)} KB",
+    );
     return kb;
   }
-
 }
